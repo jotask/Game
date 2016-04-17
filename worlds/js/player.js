@@ -11,43 +11,51 @@ function Player(){
 
     var size = 32;
 
-    var x = 0;
-    var y = 0;
+    this.x = 0;
+    this.y = 0;
 
-    var bounds = new Bound(x, y, size, size);
+    this.bounds = new Bound(this.x, this.y, size, size);
 
     this.init = function (){};
 
     this.setPosition = function (xx, yy){
-        x = xx;
-        y = yy;
-        bounds.x = xx;
-        bounds.y = yy;
+        this.x = xx;
+        this.y = yy;
+        this.bounds.x = xx;
+        this.bounds.y = yy;
     };
 
     this.update = function (delta){
         if(87 in keysDown || 38 in keysDown){
-            y -= speed * delta;
+            this.y -= speed * delta;
         }
         if(83 in keysDown || 40 in keysDown){
-            y += speed * delta;
+            this.y += speed * delta;
         }
         if(65 in keysDown || 37 in keysDown){
-            x -= speed * delta;
+            this.x -= speed * delta;
         }
         if(68 in keysDown || 39 in keysDown){
-            x += speed * delta;
+            this.x += speed * delta;
         }
-        bounds.setPosition(x, y);
+        this.bounds.setPosition(this.x, this.y);
+    };
+
+    this.collide = function(other){
+
+        return Boolean(this.bounds.x <= (other.x + other.width)
+        && other.x <= (this.bounds.x + this.bounds.width)
+        && this.bounds.y <= (other.y + other.height)
+        && other.y <= (this.bounds.y + this.bounds.height));
     };
 
     this.render = function (ctx){
         if(imgReady)
-            ctx.drawImage(heroImage, x, y);
+            ctx.drawImage(heroImage, this.x, this.y);
     };
 
     this.debug = function (ctx){
-        bounds.debug(ctx);
+        this.bounds.debug(ctx);
     };
 
 }

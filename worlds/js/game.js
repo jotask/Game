@@ -18,18 +18,18 @@ var monsterCaught = 0;
 
 function Bound(xP, yP, width, height){
 
-    var x = xP;
-    var y = yP;
-    var width = width;
-    var height = height;
+    this.x = xP;
+    this.y = yP;
+    this.width = width;
+    this.height = height;
 
     this.setPosition = function (xx, yy){
-        x = xx;
-        y = yy;
+        this.x = xx;
+        this.y = yy;
     };
 
     this.debug = function(ctx){
-        ctx.fillRect(x, y, width, height);
+        ctx.fillRect(this.x, this.y, this.width, this.height);
     };
 
 }
@@ -103,17 +103,13 @@ var update = function(delta){
 };
 
 var checkCollisions = function(){
-
-    // Are they touching?
-    if (
-        player.x <= (monster.x + 32)
-        && monster.x <= (player.x + 32)
-        && player.y <= (monster.y + 32)
-        && monster.y <= (player.y + 32)
-    ) {
-        console.log("collision");
-        // ++monsterCaught;
-        // reset();
+    // Touch World
+    if (Boolean(world.collide(player))) {
+        console.log("collision.world");
+    }
+    // Touch Enemies
+    if (Boolean(player.collide(monster.bounds))) {
+        // console.log("collision.enemy");
     }
 
 };
@@ -133,13 +129,20 @@ var render = function(){
 };
 
 var debugRender = function(){
-    ctx.strokeStyle = "red";
+
     ctx.fillStyle = "red";
-    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle="green";
+    ctx.lineWidth="1";
+    ctx.font = "10px Arial";
+    ctx.fontcolor = "orange";
+
+    ctx.globalAlpha = 1;
     world.debug(ctx);
     player.debug(ctx);
     monster.debug(ctx);
     gui.debug(ctx);
+    ctx.fillStyle = "blue";
+    world.debugCoord(ctx);
     ctx.globalAlpha = 1;
 };
 

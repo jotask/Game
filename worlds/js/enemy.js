@@ -9,37 +9,33 @@ function Enemy(){
 
     var size = 32;
 
-    var x = 0;
-    var y = 0;
+    this.x = 0;
+    this.y = 0;
 
-    var bounds = new Bound(x, y, size, size);
+    this.bounds = new Bound(this.x, this.y, size, size);
 
     this.init = function (){
 
     };
 
     this.setPosition = function (xx, yy){
-        x = xx;
-        y = yy;
-        bounds.x = xx;
-        bounds.y = yy;
-        console.log("Position:");
-        console.log(x, y);
-        console.log("Bounds:");
-        console.log(bounds.x, bounds.y);
+        this.x = xx;
+        this.y = yy;
+        this.bounds.x = xx;
+        this.bounds.y = yy;
     };
 
     this.update = function (delta){
-        bounds.setPosition(x, y);
+        this.bounds.setPosition(this.x, this.y);
     };
 
     this.render = function (ctx){
         if(enemyReady)
-            ctx.drawImage(enemyImage, x, y);
+            ctx.drawImage(enemyImage, this.x, this.y);
     };
 
     this.debug = function (ctx){
-        bounds.debug(ctx);
-    }
+        this.bounds.debug(ctx);
+    };
 
 }
