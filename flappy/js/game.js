@@ -1,10 +1,7 @@
-/**
- * Created by Jota on 16/04/2016.
- */
 
 var
 
-    debug = true,
+    debug = false,
 
     canvas,
     ctx,
@@ -125,6 +122,9 @@ var
 
                 // check collision for the first pipe
                 if(i === 0){
+
+                    score += p.x === bird.x ? 1 : 0;
+
                     var cx = Math.min(Math.max(bird.x, p.x), p.x + p.width);
                     var cy1 = Math.min(Math.max(bird.y, p.y), p.y + p.height);
                     var cy2 = Math.min(Math.max(bird.y, p.y + p.height + 80), p.y +  2 * p.height + 80);
@@ -139,7 +139,7 @@ var
                     var r = bird.radius * bird.radius;
 
                     if(r > d1 || r > d2){
-
+                        currentstate = states.Score;
                     }
 
                 }
@@ -182,8 +182,22 @@ function onpress(evt){
             bird.jump();
             break;
         case states.Score:
-            pipes.reset();
-            currentstate = states.Splash;
+
+            // get event position
+            var mx = evt.offsetX, my = evt.offsetY;
+            if (mx == null || my == null) {
+                mx = evt.touches[0].clientX;
+                my = evt.touches[0].clientY;
+            }
+            // check if within
+            if (okbtn.x < mx && mx < okbtn.x + okbtn.width &&
+                okbtn.y < my && my < okbtn.y + okbtn.height
+            ) {
+                pipes.reset();
+                currentstate = states.Splash;
+                score = 0;
+            }
+
             break;
         default:
             console.error("onpress.error");
@@ -222,6 +236,14 @@ function main(){
     img.onload = function(){
         initSprites(this);
         ctx.fillStyle = s_bg.color;
+
+        okbtn = {
+            x: (width - s_buttons.Ok.width)/2,
+            y: height - 200,
+            width: s_buttons.Ok.width,
+            height: s_buttons.Ok.height
+        }
+
         run();
     }
 
@@ -257,7 +279,7 @@ function update(){
         pipes.update();
     }
     if(currentstate === states.Score){
-
+        bird.update();
     }
 
 }
@@ -284,10 +306,20 @@ function render(){
     }
     if(currentstate === states.Game){
         pipes.render(ctx);
+        s_numberB.draw(ctx, null, 20, score, width2);
         bird.render(ctx);
     }
     if(currentstate === states.Score){
         pipes.render(ctx);
         bird.render(ctx);
+        
+        // draw gameover text and score board
+        s_text.GameOver.draw(ctx, width2 - s_text.GameOver.width/2, height-400);
+        s_score.draw(ctx, width2 - s_score.width/2, height-340);
+        s_buttons.Ok.draw(ctx, okbtn.x, okbtn.y);
+        // draw score and best inside the score board
+        s_numberS.draw(ctx, width2-47, height-304, score, null, 10);
+        s_numberS.draw(ctx, width2-47, height-262, best, null, 10);
+
     }
 }
