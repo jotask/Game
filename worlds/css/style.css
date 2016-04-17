@@ -17,5 +17,21 @@ canvas {
     left: 0;
     right: 0;
     background:transparent;
-    border: 25px dotted white;
+    /*border: 25px dotted white;*/
+    /*outline: thick solid #00ff00";*/
+    outline-style: dotted;
+    outline-width: 77px;
+    outline-color: firebrick;
+
+    background-color: #69D2E7;
+    /*outline: 10px dashed #E0E4CC;*/
+    box-shadow: 0 0 0 10px #red;
+    /*animation: 1s animateBorderOne ease infinite;*/
+}
+
+@keyframes animateBorderOne {
+    to {
+        outline-color: #69D2E7;
+        box-shadow: 0 0 0 77px #E0E4CC;
+    }
 }

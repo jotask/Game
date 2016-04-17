@@ -9,12 +9,12 @@ function Gui(){
 
     };
 
-    this.render = function (ctx){
+    this.render = function (){
         ctx.fillStyle = "rgb(250,250,250)";
         ctx.font = "24px Helvetica";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        ctx.fillText("Monster caught: " + monsterCaught, 32, 32);
+        ctx.fillText("Monster caught: " + 0, 32, 32);
     };
 
     this.debug = function (ctx){

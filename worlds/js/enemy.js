@@ -1,8 +1,12 @@
 function Enemy(){
 
-    var size = 32;
+    const animationSpeed = 7;
+    const size = 32;
 
-    this.position = new Vector2(0,0);
+    var frame = 0;
+    const animation = [0,1];
+
+    this.position = new Vector2(200,360);
 
     this.bounds = new Bound(this.x, this.y, size, size);
 
@@ -19,14 +23,21 @@ function Enemy(){
 
     this.update = function (delta){
         this.bounds.setPosition(this.position.x, this.position.y);
+        updateAnimation();
     };
 
-    this.render = function (ctx){
-        s_monster.draw(ctx, this.position.x, this.position.y);
+    var updateAnimation = function(){
+        frame += frames % animationSpeed === 0 ? 1 : 0;
+        frame %= animation.length;
     };
 
-    this.debug = function (ctx){
-        this.bounds.debug(ctx);
+    this.render = function (){
+        s_monster[frame].draw(this.position.x, this.position.y);
+    };
+
+    this.debug = function (){
+        ctx.fillStyle = "red";
+        this.bounds.debug();
     };
 
 }

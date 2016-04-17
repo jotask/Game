@@ -51,7 +51,7 @@ function World(){
 
         return false;
 
-    }
+    };
 
     this.update = function (delta){
 
@@ -60,7 +60,7 @@ function World(){
     this.render = function (ctx){
         for(var i = 0; i < width; i++) {
             for(var j = 0; j < height; j++) {
-                cells[i][j].render(ctx);
+                cells[i][j].render({parameters: {parameters: {parameters: {ctx: ctx}}}});
             }
         }
     };
@@ -92,19 +92,21 @@ function Cell(x, y, t){
 
     this.type = t;
 
-    this.render = function(ctx){
+    this.render = function(){
         var x = this.position.x * Cell.SIZE;
         var y = this.position.y * Cell.SIZE;
         if (this.type === CELLTYPE.WALL) {
-            s_world_block.draw(ctx, x, y);
+            s_world_block.draw(x, y);
+            // ctx.drawImage(s_world_block.img, x, y);
         }else if (this.type === CELLTYPE.AIR) {
-            s_world_air.draw(ctx, x, y);
+            s_world_air.draw(x, y);
         }
-    }
+    };
 
     this.debug = function (ctx) {
 
         if (this.type === CELLTYPE.WALL) {
+            ctx.fillStyle = "black";
             ctx.fillRect(this.position.x * Cell.SIZE, this.position.y * Cell.SIZE, Cell.SIZE, Cell.SIZE);
         }else if (this.type === CELLTYPE.AIR) {
             ctx.beginPath();
@@ -117,6 +119,7 @@ function Cell(x, y, t){
     this.text = function(ctx){
         var text = "[" +  this.position.x +"-"+this.position.y +"]";
         ctx.fillText(text, this.position.x * Cell.SIZE, this.position.y * Cell.SIZE);
-    }
+    };
 
 }
+

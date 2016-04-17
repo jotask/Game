@@ -1,146 +1,91 @@
 
-//Canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-
-canvas.width = 512;
-canvas.height = 480;
-document.body.appendChild(canvas);
-
+const firstState = states.Play;
+const WIDTH = 512;
+const HEIGHT = 480;
 var debug = true;
 
-var world;
-var player;
-var monster;
-var gui;
+var canvas;
+var ctx;
 
-var monsterCaught = 0;
+var gsm;
+
 var frames = 0;
 
 // Handle Input
 var keysDown = {};
 
-addEventListener("keydown", function(e){
-    keysDown[e.keyCode] = true;
-}, false);
-
-addEventListener("keyup", function(e){
-    delete keysDown[e.keyCode];
-}, false);
-
-// New Game
-var reset = function(){
-    var x = canvas.width / 2;
-    var y = canvas.height / 2;
-    player.setPosition(x, y);
-
-    var xxx = 32 + (Math.random() * (canvas.width - 64));
-    var yyy = 32 + (Math.random() * (canvas.height - 64));
-    monster.setPosition(xxx, yyy);
-};
-
-// Update game object
-
-// Main Game Loop
-
 var load = function(){
-
     var spriteSheetReady = false;
     var spriteSheet = new Image();
     spriteSheet.onload = function(){
         initSprites(this);
         spriteSheetReady = true;
         run();
-    }
+    };
     spriteSheet.src = "img/sprite.png";
-
-}
+};
 
 var run = function(){
 
-    world = new World();
-    world.init();
-    player = new Player();
-    monster = new Enemy();
-    gui = new Gui();
+    //Canvas
+    canvas = document.createElement("canvas");
+    ctx = canvas.getContext("2d");
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    document.body.appendChild(canvas);
 
-    reset();
+    addListeners();
+
+    gsm = new GameStateManager();
+    gsm.changeState(firstState);
 
     loop();
+};
+
+var addListeners = function(){
+
+    addEventListener("keydown", function(e){ keysDown[e.keyCode] = true; }, false);
+    addEventListener("keyup", function(e){ delete keysDown[e.keyCode]; }, false);
+
+    var evt = "touchstart";
+    if(WIDTH >= 500){
+        evt = "mousedown";
+    }
+    addEventListener(evt, function(e){gsm.onClick(e)}, false);
 };
 
 var loop = function(){
     var now = Date.now();
     var delta = now - then;
-
     update (delta / 1000);
     render();
     then = now;
-
     // Request to do this again ASAP
     requestAnimationFrame(loop);
 };
 
 var update = function(delta){
-
-    if(81 in keysDown){
+    if(81 in keysDown)
         debug = !debug;
-    }
-
     frames++;
-
-    world.update(delta);
-    player.update(delta);
-    monster.update(delta);
-    gui.update(delta);
-
-    // checkCollisions();
-
-};
-
-var checkCollisions = function(){
-    // Touch World
-    if (Boolean(world.collide(player))) {
-        console.log("collision.world");
-    }
-    // Touch Enemies
-    if (Boolean(player.collide(monster.bounds))) {
-        // console.log("collision.enemy");
-    }
-
+    gsm.update(delta);
 };
 
 var render = function(){
-
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    world.render(ctx);
-    monster.render(ctx);
-    player.render(ctx);
-    gui.render(ctx);
-
-    if(Boolean(debug)){
-        debugRender();
-    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    gsm.render(ctx);
+    if(Boolean(debug))
+        gsm.debug(ctx);
 };
 
-var debugRender = function(){
-
-    ctx.fillStyle = "red";
-    ctx.strokeStyle="green";
-    ctx.lineWidth="1";
-    ctx.font = "10px Arial";
-    ctx.fontcolor = "orange";
-
-    ctx.globalAlpha = 1;
-    world.debug(ctx);
-    player.debug(ctx);
-    monster.debug(ctx);
-    gui.debug(ctx);
-    ctx.fillStyle = "blue";
-    // world.debugCoord(ctx);
-    ctx.globalAlpha = 1;
-};
+function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
 
 var then = Date.now();
+
 load();

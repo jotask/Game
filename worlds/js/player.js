@@ -4,11 +4,11 @@ function Player(){
     const speed = 250;
 
     var frame = 0;
-    var animation = [0,1];
+    const animation = [0,1];
 
     var size = 32;
 
-    this.position = new Vector2(0,0);
+    this.position = new Vector2(canvas.width / 2, canvas.height / 2);
     this.velocity = new Vector2(0,0);
 
     this.bounds = new Bound(this.x, this.y, size, size);
@@ -40,7 +40,7 @@ function Player(){
             this.velocity.x += speed * delta;
         }
 
-        if(!world.collide(player)) {
+        if(!gsm.getState().world.collide(gsm.getState().player)) {
             this.position.x += this.velocity.x;
             this.position.y += this.velocity.y;
         }
@@ -56,7 +56,7 @@ function Player(){
     var updateAnimation = function(){
         frame += frames % animationSpeed === 0 ? 1 : 0;
         frame %= animation.length;
-    }
+    };
 
     this.collide = function(other){
 
@@ -66,12 +66,13 @@ function Player(){
         && other.y <= (this.bounds.y + this.bounds.height));
     };
 
-    this.render = function (ctx){
-        s_player[frame].draw(ctx, this.position.x, this.position.y);
+    this.render = function (){
+        s_player[frame].draw(this.position.x, this.position.y);
     };
 
-    this.debug = function (ctx){
-        this.bounds.debug(ctx);
+    this.debug = function (){
+        ctx.fillStyle = "green";
+        this.bounds.debug();
     };
 
 }

@@ -5,7 +5,7 @@ function Vector2(x, y){
     this.reset = function(){
         this.x = 0;
         this.y = 0;
-    }
+    };
 
     this.isZero = function(){
         return Boolean((this.x === 0) && (this.y === 0));
@@ -25,7 +25,7 @@ function Bound(xP, yP, width, height){
         this.y = yy;
     };
 
-    this.debug = function(ctx){
+    this.debug = function(){
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };
 

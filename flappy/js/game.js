@@ -302,16 +302,16 @@ function render(){
         s_splash.draw(ctx, width2 - s_splash.width / 2, height - 300);
         s_text.GetReady.draw(ctx, width2 - s_text.GetReady.width / 2, height - 380);
 
-        bird.render(ctx);
+        bird.render({parameters: {parameters: {parameters: {ctx: ctx}}}});
     }
     if(currentstate === states.Game){
-        pipes.render(ctx);
+        pipes.render({parameters: {parameters: {parameters: {ctx: ctx}}}});
         s_numberB.draw(ctx, null, 20, score, width2);
-        bird.render(ctx);
+        bird.render({parameters: {parameters: {parameters: {ctx: ctx}}}});
     }
     if(currentstate === states.Score){
-        pipes.render(ctx);
-        bird.render(ctx);
+        pipes.render({parameters: {parameters: {parameters: {ctx: ctx}}}});
+        bird.render({parameters: {parameters: {parameters: {ctx: ctx}}}});
         
         // draw gameover text and score board
         s_text.GameOver.draw(ctx, width2 - s_text.GameOver.width/2, height-400);
