@@ -1,0 +1,21 @@
+body{
+
+    background-color: cyan;
+
+    /*background-image: url("../img/p.jpg");*/
+    /*background-size: 100%, 100%;*/
+    /*background-repeat: repeat-x;*/
+    /*background-blend-mode: color-dodge;*/
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background:transparent;
+    border: 25px dotted white;
+}
