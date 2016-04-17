@@ -15,25 +15,7 @@ var monster;
 var gui;
 
 var monsterCaught = 0;
-
-function Bound(xP, yP, width, height){
-
-    this.x = xP;
-    this.y = yP;
-    this.width = width;
-    this.height = height;
-
-    this.setPosition = function (xx, yy){
-        this.x = xx;
-        this.y = yy;
-    };
-
-    this.debug = function(ctx){
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    };
-
-}
-
+var frames = 0;
 
 // Handle Input
 var keysDown = {};
@@ -60,6 +42,19 @@ var reset = function(){
 // Update game object
 
 // Main Game Loop
+
+var load = function(){
+
+    var spriteSheetReady = false;
+    var spriteSheet = new Image();
+    spriteSheet.onload = function(){
+        initSprites(this);
+        spriteSheetReady = true;
+        run();
+    }
+    spriteSheet.src = "img/sprite.png";
+
+}
 
 var run = function(){
 
@@ -88,17 +83,18 @@ var loop = function(){
 
 var update = function(delta){
 
-
     if(81 in keysDown){
         debug = !debug;
     }
+
+    frames++;
 
     world.update(delta);
     player.update(delta);
     monster.update(delta);
     gui.update(delta);
 
-    checkCollisions();
+    // checkCollisions();
 
 };
 
@@ -119,8 +115,8 @@ var render = function(){
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     world.render(ctx);
-    player.render(ctx);
     monster.render(ctx);
+    player.render(ctx);
     gui.render(ctx);
 
     if(Boolean(debug)){
@@ -142,9 +138,9 @@ var debugRender = function(){
     monster.debug(ctx);
     gui.debug(ctx);
     ctx.fillStyle = "blue";
-    world.debugCoord(ctx);
+    // world.debugCoord(ctx);
     ctx.globalAlpha = 1;
 };
 
 var then = Date.now();
-run();
+load();

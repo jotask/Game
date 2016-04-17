@@ -1,45 +1,62 @@
 function Player(){
 
-    var imgReady = false;
-    var heroImage = new Image();
-    heroImage.onload = function () {
-        imgReady = true;
-    };
-    heroImage.src = "img/hero.png";
+    const animationSpeed = 7;
+    const speed = 250;
 
-    var speed = 250;
+    var frame = 0;
+    var animation = [0,1];
 
     var size = 32;
 
-    this.x = 0;
-    this.y = 0;
+    this.position = new Vector2(0,0);
+    this.velocity = new Vector2(0,0);
 
     this.bounds = new Bound(this.x, this.y, size, size);
 
     this.init = function (){};
 
     this.setPosition = function (xx, yy){
-        this.x = xx;
-        this.y = yy;
+        this.position.x = xx;
+        this.position.y = yy;
         this.bounds.x = xx;
         this.bounds.y = yy;
     };
 
     this.update = function (delta){
+
+        this.velocity.reset();
+
+        // handle input
         if(87 in keysDown || 38 in keysDown){
-            this.y -= speed * delta;
+                this.velocity.y -= speed * delta;
         }
         if(83 in keysDown || 40 in keysDown){
-            this.y += speed * delta;
+            this.velocity.y += speed * delta;
         }
         if(65 in keysDown || 37 in keysDown){
-            this.x -= speed * delta;
+            this.velocity.x -= speed * delta;
         }
         if(68 in keysDown || 39 in keysDown){
-            this.x += speed * delta;
+            this.velocity.x += speed * delta;
         }
-        this.bounds.setPosition(this.x, this.y);
+
+        if(!world.collide(player)) {
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+        }
+
+        if(!Boolean(this.velocity.isZero())){
+            updateAnimation();
+        }
+
+        // handle update
+        this.bounds.setPosition(this.position.x, this.position.y);
     };
+
+    var updateAnimation = function(){
+        frame += frames % animationSpeed === 0 ? 1 : 0;
+        frame %= animation.length;
+    }
 
     this.collide = function(other){
 
@@ -50,8 +67,7 @@ function Player(){
     };
 
     this.render = function (ctx){
-        if(imgReady)
-            ctx.drawImage(heroImage, this.x, this.y);
+        s_player[frame].draw(ctx, this.position.x, this.position.y);
     };
 
     this.debug = function (ctx){

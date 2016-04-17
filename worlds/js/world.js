@@ -4,12 +4,6 @@ var CELLTYPE = {
 
 function World(){
 
-    var worldReady = false;
-    var worldImage = new Image();
-    worldImage.onload = function () {
-        worldReady = true;
-    };
-    worldImage.src = "img/background.png";
 
     var cells = [];
 
@@ -31,31 +25,29 @@ function World(){
         }
     };
 
+    this.getCell = function(x, y) {
+        var x = parseInt((width * x) / (Cell.SIZE * width));
+        var y = parseInt((height * y) / (Cell.SIZE * height));
+        var c;
+        if (x >= 0 && y >= 0 && x < width && y < height){
+            c = cells[x][y];
+        }
+        return c;
+    };
+
     this.collide = function(player){
-        var xPlayer = player.x;
-        var yPlayer = player.y;
 
-        var indexX = xPlayer;
-        var indexY = yPlayer;
+        var nextP = new Vector2(player.position.x, player.position.y);
+        nextP.x += player.velocity.x;
+        nextP.y += player.velocity.y;
 
-        var indexX = parseInt(indexX);
-        var indexY = parseInt(indexY);
+        var nextC = this.getCell(nextP.x, nextP.y);
 
-        console.log(indexX, indexY);
-
-        // var c = cells[indexY][indexX];
-
-        // console.log(indexX, indexY);
-
-        // if(cells[indexX] && cells[indexX][0]){
-        //     console.log(indexX);
-        // }
-
-        // console.log(c.type);
-
-        // if(c.type === CELLTYPE.WALL){
-        //     console.log(indexX, indexY);
-        // }
+        if(nextC === 'undefined'){
+            if(player.bounds.collideWith(nextC.bounds)){
+                console.log("collide");
+            }
+        }
 
         return false;
 
@@ -66,8 +58,11 @@ function World(){
     };
 
     this.render = function (ctx){
-        if(worldReady && !Boolean(debug))
-            ctx.drawImage(worldImage, 0, 0);
+        for(var i = 0; i < width; i++) {
+            for(var j = 0; j < height; j++) {
+                cells[i][j].render(ctx);
+            }
+        }
     };
 
     this.debug = function (ctx){
@@ -91,26 +86,37 @@ function World(){
 Cell.SIZE = 32;
 function Cell(x, y, t){
 
-    var x = x;
-    var y = y;
+    this.position = new Vector2(x, y);
+
+    this.bounds = new Bound(x, y, Cell.SIZE, Cell.SIZE);
 
     this.type = t;
+
+    this.render = function(ctx){
+        var x = this.position.x * Cell.SIZE;
+        var y = this.position.y * Cell.SIZE;
+        if (this.type === CELLTYPE.WALL) {
+            s_world_block.draw(ctx, x, y);
+        }else if (this.type === CELLTYPE.AIR) {
+            s_world_air.draw(ctx, x, y);
+        }
+    }
 
     this.debug = function (ctx) {
 
         if (this.type === CELLTYPE.WALL) {
-            ctx.fillRect(x * Cell.SIZE, y * Cell.SIZE, Cell.SIZE, Cell.SIZE);
+            ctx.fillRect(this.position.x * Cell.SIZE, this.position.y * Cell.SIZE, Cell.SIZE, Cell.SIZE);
         }else if (this.type === CELLTYPE.AIR) {
             ctx.beginPath();
-            ctx.rect(x * Cell.SIZE, y * Cell.SIZE, Cell.SIZE,Cell.SIZE);
+            ctx.rect(this.position.x * Cell.SIZE, this.position.y * Cell.SIZE, Cell.SIZE,Cell.SIZE);
             ctx.stroke();
         }
         // console.error("world.cell.debug");
     };
 
     this.text = function(ctx){
-        var text = "[" +  x +"-"+y +"]";
-        ctx.fillText(text, x * Cell.SIZE, y * Cell.SIZE);
+        var text = "[" +  this.position.x +"-"+this.position.y +"]";
+        ctx.fillText(text, this.position.x * Cell.SIZE, this.position.y * Cell.SIZE);
     }
 
 }
