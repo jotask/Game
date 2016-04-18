@@ -1,5 +1,5 @@
 
-const firstState = states.Play;
+const firstState = states.Splash;
 const WIDTH = 512;
 const HEIGHT = 480;
 var debug = false;

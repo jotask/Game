@@ -84,6 +84,32 @@ function World(){
 
     };
 
+    this.spawnCell = function () {
+
+        var nextC;
+
+        var happy = false;
+
+        do{
+            var xxx = (Math.random() * canvas.width);
+            var yyy = (Math.random() * canvas.height);
+
+            var x = parseInt((canvas.width * xxx) / (Cell.SIZE * canvas.width));
+            var y = parseInt((canvas.height * yyy) / (Cell.SIZE * canvas.height));
+
+            nextC = this.getCell(x, y);
+            if (nextC === 'undefined' || nextC == null) {
+                continue;
+            }
+            if (nextC.type === CELLTYPE.AIR) {
+                happy = true;
+            }
+
+        }while(!Boolean(happy));
+
+        return nextC;
+    }
+
     this.update = function (delta){
 
     };

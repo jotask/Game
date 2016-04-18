@@ -61,7 +61,8 @@ function Splash(){
     var position;
 
     this.init = function () {
-        position = new Vector2(WIDTH / 2, HEIGHT / 2);
+        position = new Vector2(0,0);
+        console.log("splash.init");
     };
 
     this.onClick = function (e){
@@ -69,14 +70,11 @@ function Splash(){
     };
 
     this.update = function(delta){
-        var tmp = getMousePos(canvas);
+
     };
 
     this.render = function (){
-        ctx.save();
-        ctx.scale(1,1);
-        s_splash.draw(ctx, position.x, position.y);
-        ctx.restore();
+        s_splash.draw(100, 100);
     };
 
     this.debug = function (){
@@ -84,19 +82,24 @@ function Splash(){
     };
 
     this.dispose = function (){
-
+        delete position;
     };
 
 }
 
 function Menu(){
 
-    this.init = function () {
+    var  play_button;
 
+    this.init = function () {
+        var x = canvas.width / 2 - (s_play_btn.width / 2) / 2;
+        var y = canvas.height / 2 - (s_play_btn.height / 2) / 2;
+        play_button = new Button(s_play_btn, x, y);
     };
 
     this.onClick = function (e){
-        gsm.changeState(states.Play);
+        if(Boolean(play_button.onClick(e)))
+            gsm.changeState(states.Play);
     };
 
     this.update = function(delta){
@@ -104,11 +107,21 @@ function Menu(){
     };
 
     this.render = function (){
-
+        play_button.render();
     };
 
     this.debug = function (){
+        play_button.debug();
 
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2,0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0,canvas.height / 2);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
     };
 
     this.dispose = function (){
@@ -128,23 +141,23 @@ function Play(){
         this.world = new World();
         this.world.init();
         this.player = new Player();
+        this.player.init();
         this.monster = new Enemy();
         this.gui = new Gui();
 
-        reset();
+        this.reset();
     };
 
     this.onClick = function (e){};
 
-    // New Game
-     var reset = function(){
-        var x = canvas.width / 2;
-        var y = canvas.height / 2;
-        // this.player.setPosition(x, y);
+     this.reset = function(){
+         var c;
 
-        var xxx = (Math.random() * canvas.width);
-        var yyy = (Math.random() * canvas.height);
-        // this.monster.setPosition(xxx, yyy);
+         c = this.world.spawnCell();
+         this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
+
+         c = this.world.spawnCell();
+         this.monster.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
     };
 
     this.update = function(delta){
@@ -181,14 +194,24 @@ function Play(){
     };
 
     this.dispose = function (){
+        this.world.dispose();
+        delete this.world;
 
+        this.player.dispose();
+        delete this.player;
+
+        this.monster.dispose();
+        delete this.monster;
+
+        this.gui.dispose();
+        delete this.gui;
     };
 
-    var checkCollisions = function(){
-        if (Boolean(this.world.collide(this.player)))
-            console.log("collision.world");
-        if (Boolean(this.player.collide(monster.bounds)))
-            console.log("collision.enemy");
-    };
+    // var checkCollisions = function(){
+    //     if (Boolean(this.world.collide(this.player)))
+    //         console.log("collision.world");
+    //     if (Boolean(this.player.collide(monster.bounds)))
+    //         console.log("collision.enemy");
+    // };
 
 }

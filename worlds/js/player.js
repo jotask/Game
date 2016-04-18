@@ -2,18 +2,22 @@ function Player(){
 
     const animationSpeed = 7;
     const speed = 250;
+    const size = 32;
 
     var frame = 0;
     const animation = [0,1];
 
-    var size = 32;
+    this.position;
+    this.velocity;
+    this.bounds;
 
-    this.position = new Vector2(canvas.width / 2 - (77), canvas.height / 2 - (25));
-    this.velocity = new Vector2(0,0);
+    this.init = function (){
 
-    this.bounds = new Bound(this.x, this.y, size, size);
+        this.position = new Vector2(0, 0);
+        this.velocity = new Vector2(0,0);
 
-    this.init = function (){};
+        this.bounds = new Bound(this.x, this.y, size, size);
+    };
 
     this.setPosition = function (xx, yy){
         this.position.x = xx;

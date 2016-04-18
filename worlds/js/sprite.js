@@ -3,6 +3,8 @@ var
 // Sprite vars //
     s_splash,
 
+    s_play_btn,
+
     s_player,
     s_monster,
     s_world_block,
@@ -43,7 +45,9 @@ Sprite.prototype.draw = function(x, y) {
  */
 function initSprites(img) {
 
-    s_splash = new Sprite(img, 16 * 2,  16 * 0, 32, 32);
+    s_splash = new Sprite(img, 32,  0, 16, 16);
+
+    s_play_btn = new Sprite(img, 32,  16, 74, 46);
 
     s_player  = [
         new Sprite(img, 16 * 0,  16 * 0, 16, 16),
