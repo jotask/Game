@@ -58,23 +58,45 @@ function GameStateManager(){
 
 function Splash(){
 
+    const TIME = 3;
+
     var position;
+    var start;
+    var end;
+
+    var opacity;
 
     this.init = function () {
-        position = new Vector2(0,0);
+        var x = canvas.width / 2 - (s_splash.width / 2) / 2;
+        var y = canvas.height / 2 - (s_splash.height / 2) / 2;
+        position = new Vector2(x, y);
         console.log("splash.init");
+
+        start = new Date();
+        end = new Date();
+        end.setSeconds(end.getSeconds() + TIME);
+
+        opacity = 1;
+
     };
 
     this.onClick = function (e){
         gsm.changeState(states.Menu);
     };
 
-    this.update = function(delta){
-
+    this.update = function(delta) {
+        if(end < new Date()){
+            gsm.changeState(states.Splash);
+        }
+        opacity -= (0.0055);
     };
 
     this.render = function (){
-        s_splash.draw(100, 100);
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        s_splash.draw(position.x, position.y );
+        ctx.globalAlpha = 1;
+        ctx.restore();
     };
 
     this.debug = function (){
@@ -83,6 +105,9 @@ function Splash(){
 
     this.dispose = function (){
         delete position;
+        delete first;
+        delete finished;
+        delete TIME;
     };
 
 }
@@ -111,7 +136,7 @@ function Menu(){
     };
 
     this.debug = function (){
-        play_button.debug();
+        play_button.debug
 
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2,0);
