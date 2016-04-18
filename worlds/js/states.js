@@ -86,7 +86,7 @@ function Splash(){
 
     this.update = function(delta) {
         if(end < new Date()){
-            gsm.changeState(states.Splash);
+            gsm.changeState(states.Menu);
         }
         opacity -= (0.0055);
     };
@@ -104,10 +104,7 @@ function Splash(){
     };
 
     this.dispose = function (){
-        delete position;
-        delete first;
-        delete finished;
-        delete TIME;
+        position.dispose();
     };
 
 }
@@ -136,7 +133,7 @@ function Menu(){
     };
 
     this.debug = function (){
-        play_button.debug
+        play_button.debug();
 
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2,0);

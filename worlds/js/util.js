@@ -1,4 +1,5 @@
 function Vector2(x, y){
+
     this.x = x;
     this.y = y;
 
@@ -9,6 +10,11 @@ function Vector2(x, y){
 
     this.isZero = function(){
         return Boolean((this.x === 0) && (this.y === 0));
+    };
+
+    this.dispose = function(){
+        delete this.x;
+        delete this.y;
     }
 
 }
@@ -36,17 +42,15 @@ function Bound(xP, yP, width, height){
         var three = Boolean(this.y < (other.y + other.height));
         var four = Boolean((this.y + this.height) > other.y);
 
-        var bool = Boolean(one && two && three && four);
-
-        return bool;
+        return Boolean(one && two && three && four);
 
     };
 
 }
 
-function Button(sprite, x, y){
+function Button(s, x, y){
 
-    var sprite = sprite;
+    var sprite = s;
     var position = new Vector2(x, y);
 
     var bounds = new Bound(x, y, sprite.width / 2, sprite.height / 2);
@@ -54,19 +58,19 @@ function Button(sprite, x, y){
     this.onClick = function (e) {
         var rect = canvas.getBoundingClientRect();
         return Boolean(collide(e.clientX - rect.left, e.clientY - rect.top));
-    }
+    };
 
     this.update = function (delta) {
 
-    }
+    };
 
     this.render = function(){
         sprite.draw(position.x, position.y);
-    }
+    };
 
     this.debug = function (){
         bounds.debug();
-    }
+    };
 
     var collide = function (mouseX, mouseY){
         if(((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.width)))&&((mouseY > bounds.y) && (mouseY < (bounds.y + bounds.height)))){
