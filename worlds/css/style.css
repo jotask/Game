@@ -1,7 +1,9 @@
 body{
 
-    background-color: cyan;
+    /*background-color: cyan;*/
 
+    background-image: url("../img/bg.jpg");
+    background-size: 7%;
     /*background-image: url("../img/p.jpg");*/
     /*background-size: 100%, 100%;*/
     /*background-repeat: repeat-x;*/
@@ -16,16 +18,16 @@ canvas {
     bottom: 0;
     left: 0;
     right: 0;
-    background:transparent;
+    /*background:transparent;*/
     /*border: 25px dotted white;*/
     /*outline: thick solid #00ff00";*/
     outline-style: dotted;
-    outline-width: 77px;
-    outline-color: firebrick;
+    outline-width: 25px;
+    outline-color: black;
 
-    background-color: #69D2E7;
+    /*background-color: red;*/
     /*outline: 10px dashed #E0E4CC;*/
-    box-shadow: 0 0 0 10px #red;
+    box-shadow: 0 0 0 10px #1b6d85;
     /*animation: 1s animateBorderOne ease infinite;*/
 }
 

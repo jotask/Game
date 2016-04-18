@@ -242,14 +242,13 @@ function Play(){
 
         this.init = function (){
 
-        }
+        };
 
         this.addXEnemy = function (i){
             for (var j = 0; j < i; j++) {
                 this.addNewEnemy();
-                console.log("add");
             }
-        }
+        };
 
         this.addNewEnemy = function (){
             var enemy = new Enemy();
@@ -261,6 +260,14 @@ function Play(){
         var addEntity = function (e){
             entities.push(e);
         };
+
+        this.collides = function(player){
+            for(var i = 0; i < entities.length; i++){
+                if(Boolean(entities[i].collides(player))){
+                    console.log("collide");
+                }
+            }
+        }
 
         this.reset = function (level) {
             // TODO better delete enemies
@@ -277,13 +284,13 @@ function Play(){
             for(var i = 0; i < entities.length; i++){
                 entities[i].render();
             }
-        }
+        };
 
         this.debug = function (){
             for(var i = 0; i < entities.length; i++){
                 entities[i].debug();
             }
-        }
+        };
 
         this.dispose = function (){
 
