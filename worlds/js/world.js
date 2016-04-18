@@ -45,7 +45,7 @@ function World(){
             }
         }
         return cellsTmp;
-    }
+    };
 
     this.getCell = function(x, y) {
         var c;
@@ -68,7 +68,7 @@ function World(){
             var nextC = cells[i];
 
             if (nextC === 'undefined' || nextC == null) {
-                console.error("undefinied || null")
+                console.error("undefinied || null");
                 continue;
             };
 
@@ -108,7 +108,7 @@ function World(){
         }while(!Boolean(happy));
 
         return nextC;
-    }
+    };
 
     this.update = function (delta){
 
