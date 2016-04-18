@@ -70,7 +70,6 @@ function Splash(){
         var x = canvas.width / 2 - (s_splash.width / 2) / 2;
         var y = canvas.height / 2 - (s_splash.height / 2) / 2;
         position = new Vector2(x, y);
-        console.log("splash.init");
 
         start = new Date();
         end = new Date();
@@ -154,45 +153,51 @@ function Menu(){
 
 function Play(){
 
+    var level = 0;
+
     this.world;
     this.player;
-    this.monster;
     this.gui;
+    this.manager;
 
     this.init = function () {
         this.world = new World();
         this.world.init();
         this.player = new Player();
         this.player.init();
-        this.monster = new Enemy();
+
         this.gui = new Gui();
 
+        this.manager = new EntityManager(this.world);
+        this.manager.init();
+
         this.reset();
+
+        this.manager.addXEnemy(5);
+
     };
 
     this.onClick = function (e){};
 
      this.reset = function(){
-         var c;
-
-         c = this.world.spawnCell();
+         var c = this.world.spawnCell();
          this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
 
-         c = this.world.spawnCell();
-         this.monster.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
+         this.manager.reset(level);
+
     };
 
     this.update = function(delta){
         this.world.update(delta);
         this.player.update(delta);
-        this.monster.update(delta);
+        this.manager.update(delta);
         this.gui.update(delta);
     };
 
     this.render = function (){
         this.world.render();
         this.player.render();
-        this.monster.render();
+        this.manager.render();
         this.gui.render();
     };
 
@@ -207,7 +212,7 @@ function Play(){
         ctx.globalAlpha = 1;
         this.world.debug(ctx);
         this.player.debug(ctx);
-        this.monster.debug(ctx);
+        this.manager.debug(ctx);
         this.gui.debug(ctx);
         ctx.fillStyle = "blue";
         // world.debugCoord(ctx);
@@ -222,12 +227,69 @@ function Play(){
         this.player.dispose();
         delete this.player;
 
-        this.monster.dispose();
-        delete this.monster;
+        this.manager.dispose();
+        delete this.manager;
 
         this.gui.dispose();
         delete this.gui;
     };
+
+    function EntityManager(w){
+
+        var world = w;
+
+        var entities = [];
+
+        this.init = function (){
+
+        }
+
+        this.addXEnemy = function (i){
+            for (var j = 0; j < i; j++) {
+                this.addNewEnemy();
+                console.log("add");
+            }
+        }
+
+        this.addNewEnemy = function (){
+            var enemy = new Enemy();
+            var c = world.spawnCell();
+            enemy.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
+            addEntity(enemy);
+        };
+
+        var addEntity = function (e){
+            entities.push(e);
+        };
+
+        this.reset = function (level) {
+            // TODO better delete enemies
+            entities = [];
+        };
+
+        this.update = function (delta){
+            for(var i = 0; i < entities.length; i++){
+                entities[i].update();
+            }
+        };
+
+        this.render = function (){
+            for(var i = 0; i < entities.length; i++){
+                entities[i].render();
+            }
+        }
+
+        this.debug = function (){
+            for(var i = 0; i < entities.length; i++){
+                entities[i].debug();
+            }
+        }
+
+        this.dispose = function (){
+
+        }
+
+    }
 
     // var checkCollisions = function(){
     //     if (Boolean(this.world.collide(this.player)))
