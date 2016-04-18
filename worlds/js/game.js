@@ -2,7 +2,7 @@
 const firstState = states.Play;
 const WIDTH = 512;
 const HEIGHT = 480;
-var debug = true;
+var debug = false;
 
 var canvas;
 var ctx;

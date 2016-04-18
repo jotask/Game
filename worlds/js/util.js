@@ -30,13 +30,23 @@ function Bound(xP, yP, width, height){
     };
 
     this.collideWith = function(other){
-        if(other == null)
-            return;
 
-        return Boolean(this.x <= (other.x + other.width)
-        && other.x <= (this.x + width)
-        && this.y <= (other.y + other.height)
-        && other.y <= (this.y + height));
+        var one = Boolean(this.x < (other.x + other.width));
+        var two = Boolean((this.x + this.width) > other.x);
+        var three = Boolean(this.y < (other.y + other.height));
+        var four = Boolean((this.y + this.height) > other.y);
+
+        var bool = Boolean(one && two && three && four);
+
+        // console.log(one, two, three, four);
+
+        return bool;
+
+        // return Boolean(this.x <= (other.x + other.width)
+        // && other.x <= (this.x + this.width)
+        // && this.y <= (other.y + other.height)
+        // && other.y <= (this.y + this.height));
+        //
     };
 
 }

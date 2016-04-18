@@ -25,9 +25,29 @@ function World(){
         }
     };
 
+    this.getCells = function (xReal, yReal){
+
+
+        var x = parseInt((width * xReal) / (Cell.SIZE * width));
+        var y = parseInt((height * yReal) / (Cell.SIZE * height));
+
+        const surround = 2;
+
+        var cellsTmp = [];
+
+        for(var i = x; i < x + surround; i++){
+            for(var j = y; j < y + surround; j++){
+                var c = this.getCell(i, j);
+                if(c === 'undefined' || c == null) {
+                    continue;
+                }
+                cellsTmp.push(c);
+            }
+        }
+        return cellsTmp;
+    }
+
     this.getCell = function(x, y) {
-        var x = parseInt((width * x) / (Cell.SIZE * width));
-        var y = parseInt((height * y) / (Cell.SIZE * height));
         var c;
         if (x >= 0 && y >= 0 && x < width && y < height){
             c = cells[x][y];
@@ -35,18 +55,29 @@ function World(){
         return c;
     };
 
-    this.collide = function(player){
+    this.collide = function(player) {
 
         var nextP = new Vector2(player.position.x, player.position.y);
         nextP.x += player.velocity.x;
         nextP.y += player.velocity.y;
 
-        var nextC = this.getCell(nextP.x, nextP.y);
+        var cells = this.getCells(nextP.x, nextP.y);
 
-        if(nextC === 'undefined'){
-            if(player.bounds.collideWith(nextC.bounds)){
-                console.log("collide");
+        for(var i = 0; i < cells.length; i++) {
+
+            var nextC = cells[i];
+
+            if (nextC === 'undefined' || nextC == null) {
+                console.error("undefinied || null")
+                continue;
+            };
+
+            if (nextC.type === CELLTYPE.WALL) {
+                if (Boolean(player.bounds.collideWith(nextC.bounds))) {
+                    return true;
+                }
             }
+
         }
 
         return false;
@@ -57,26 +88,26 @@ function World(){
 
     };
 
-    this.render = function (ctx){
+    this.render = function (){
         for(var i = 0; i < width; i++) {
             for(var j = 0; j < height; j++) {
-                cells[i][j].render({parameters: {parameters: {parameters: {ctx: ctx}}}});
+                cells[i][j].render();
             }
         }
     };
 
-    this.debug = function (ctx){
+    this.debug = function (){
         for(var i = 0; i < width; i++) {
             for(var j = 0; j < height; j++) {
-                cells[i][j].debug(ctx);
+                cells[i][j].debug();
             }
         }
     };
 
-    this.debugCoord = function(ctx){
+    this.debugCoord = function(){
         for(var i = 0; i < width; i++) {
             for(var j = 0; j < height; j++) {
-                cells[i][j].text(ctx);
+                cells[i][j].text();
             }
         }
     }
@@ -88,7 +119,7 @@ function Cell(x, y, t){
 
     this.position = new Vector2(x, y);
 
-    this.bounds = new Bound(x, y, Cell.SIZE, Cell.SIZE);
+    this.bounds = new Bound(x * Cell.SIZE, y * Cell.SIZE, Cell.SIZE, Cell.SIZE);
 
     this.type = t;
 
@@ -103,20 +134,18 @@ function Cell(x, y, t){
         }
     };
 
-    this.debug = function (ctx) {
-
+    this.debug = function () {
         if (this.type === CELLTYPE.WALL) {
             ctx.fillStyle = "black";
-            ctx.fillRect(this.position.x * Cell.SIZE, this.position.y * Cell.SIZE, Cell.SIZE, Cell.SIZE);
+            this.bounds.debug();
         }else if (this.type === CELLTYPE.AIR) {
             ctx.beginPath();
-            ctx.rect(this.position.x * Cell.SIZE, this.position.y * Cell.SIZE, Cell.SIZE,Cell.SIZE);
+            ctx.rect(this.bounds.x, this.bounds.y, Cell.SIZE,Cell.SIZE);
             ctx.stroke();
         }
-        // console.error("world.cell.debug");
     };
 
-    this.text = function(ctx){
+    this.text = function(){
         var text = "[" +  this.position.x +"-"+this.position.y +"]";
         ctx.fillText(text, this.position.x * Cell.SIZE, this.position.y * Cell.SIZE);
     };
