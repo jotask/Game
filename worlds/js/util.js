@@ -80,3 +80,11 @@ function Button(s, x, y){
     }
 
 }
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+function isNull(object){
+    return Boolean(object === 'undefined' || object == null);
+}

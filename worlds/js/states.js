@@ -52,7 +52,7 @@ function GameStateManager(){
 
     this.getState = function(){
         return currentState;
-    }
+    };
 
 }
 
@@ -153,7 +153,7 @@ function Menu(){
 
 function Play(){
 
-    var level = 0;
+    var level = 23;
 
     this.world;
     this.player;
@@ -173,13 +173,16 @@ function Play(){
 
         this.reset();
 
-        this.manager.addXEnemy(5);
+        this.manager.addXEnemy(level);
 
     };
 
     this.onClick = function (e){};
 
-     this.reset = function(){
+    this.reset = function(){
+
+        this.world.init();
+
          var c = this.world.spawnCell();
          this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
 
@@ -192,7 +195,23 @@ function Play(){
         this.player.update(delta);
         this.manager.update(delta);
         this.gui.update(delta);
+
+        this.manager.collides(this.player);
+
+        if(this.manager.isEmpty()){
+            this.world.openDoor();
+            if(this.world.collideWithDoor(this.player)){
+                this.nextLevel();
+            }
+        }
+
     };
+
+    this.nextLevel = function (){
+        level++;
+        this.reset();
+        this.manager.addXEnemy(level);
+    }
 
     this.render = function (){
         this.world.render();
@@ -236,6 +255,11 @@ function Play(){
 
     function EntityManager(w){
 
+        var ENEMY = {
+            SPIDER: 0,
+            ZOMBIE: 1
+        }
+
         var world = w;
 
         var entities = [];
@@ -251,10 +275,26 @@ function Play(){
         };
 
         this.addNewEnemy = function (){
-            var enemy = new Enemy();
+            var enemy = createRandomEnemy();
+            enemy.init();
             var c = world.spawnCell();
             enemy.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
             addEntity(enemy);
+        };
+
+        var createRandomEnemy = function(){
+            var random;
+            random = getRandomInt(0,2);
+            // random = ENEMY.SPIDER;
+            switch (random){
+                case 0:
+                    return new Spider();
+                case 1:
+                    return new Zombie();
+                default:
+                    console.error("states.entityManager.createRandomEnemy");
+                    return new Enemy();
+            }
         };
 
         var addEntity = function (e){
@@ -263,9 +303,19 @@ function Play(){
 
         this.collides = function(player){
             for(var i = 0; i < entities.length; i++){
-                if(Boolean(entities[i].collides(player))){
-                    console.log("collide");
+                if(Boolean(player.bounds.collideWith(entities[i].getBounds()))){
+                    removeEnemy(entities[i]);
                 }
+            }
+        };
+
+        this.isEmpty = function () {
+            return Boolean(entities.length <= 0);
+        }
+
+        var removeEnemy = function (e) {
+            while (entities.indexOf(e) !== -1) {
+                entities.splice(entities.indexOf(e), 1);
             }
         }
 
@@ -275,20 +325,37 @@ function Play(){
         };
 
         this.update = function (delta){
-            for(var i = 0; i < entities.length; i++){
-                entities[i].update();
+            if(!this.isEmpty()) {
+                for (var i = 0; i < entities.length; i++) {
+                    entities[i].update();
+                }
+                ;
+                randomUpdate();
+            }
+        };
+
+        var randomUpdate = function(){
+            var selection = 5;
+            for(var i = 0; i < selection; i++){
+                // get random entity
+                var r = getRandomInt(0,entities.length);
+                entities[r].randomUpdate();
             }
         };
 
         this.render = function (){
-            for(var i = 0; i < entities.length; i++){
-                entities[i].render();
+            if(!this.isEmpty()) {
+                for (var i = 0; i < entities.length; i++) {
+                    entities[i].render();
+                }
             }
         };
 
         this.debug = function (){
-            for(var i = 0; i < entities.length; i++){
-                entities[i].debug();
+            if(!this.isEmpty()) {
+                for(var i = 0; i < entities.length; i++){
+                    entities[i].debug();
+                }
             }
         };
 
@@ -297,12 +364,5 @@ function Play(){
         }
 
     }
-
-    // var checkCollisions = function(){
-    //     if (Boolean(this.world.collide(this.player)))
-    //         console.log("collision.world");
-    //     if (Boolean(this.player.collide(monster.bounds)))
-    //         console.log("collision.enemy");
-    // };
 
 }

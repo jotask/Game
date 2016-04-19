@@ -1,3 +1,4 @@
+//noinspection BadExpressionStatementJS
 function Player(){
 
     const animationSpeed = 7;
@@ -6,10 +7,6 @@ function Player(){
 
     var frame = 0;
     const animation = [0,1];
-
-    this.position;
-    this.velocity;
-    this.bounds;
 
     this.init = function (){
 
@@ -67,7 +64,7 @@ function Player(){
     };
 
     this.debug = function (){
-        ctx.fillStyle = "green";
+        ctx.fillStyle = "firebrick";
         this.bounds.debug();
     };
 

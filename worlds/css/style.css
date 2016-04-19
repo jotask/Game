@@ -4,6 +4,7 @@ body{
 
     background-image: url("../img/bg.jpg");
     background-size: 7%;
+
     /*background-image: url("../img/p.jpg");*/
     /*background-size: 100%, 100%;*/
     /*background-repeat: repeat-x;*/
@@ -34,6 +35,6 @@ canvas {
 @keyframes animateBorderOne {
     to {
         outline-color: #69D2E7;
-        box-shadow: 0 0 0 77px #E0E4CC;
+        box-shadow: 0 0 0 13px #E0E4CC;
     }
 }

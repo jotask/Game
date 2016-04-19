@@ -5,8 +5,12 @@ var
 
     s_play_btn,
 
+    s_spider,
+
+    s_door,
+
     s_player,
-    s_monster,
+    s_zombie,
     s_world_block,
     s_world_air;
 
@@ -47,6 +51,11 @@ function initSprites(img) {
 
     s_splash = new Sprite(img, 32,  0, 16, 16);
 
+    s_door = [
+        new Sprite(img, 16 * 0,  16 * 3, 16, 16),
+        new Sprite(img, 16 * 1,  16 * 3, 16, 16)
+    ];
+
     s_play_btn = new Sprite(img, 32,  16, 74, 46);
 
     s_player  = [
@@ -55,7 +64,14 @@ function initSprites(img) {
 
     ];
 
-    s_monster  = [
+    s_spider  = [
+        new Sprite(img, 0,  64, 16, 8),
+        new Sprite(img, 0,  81, 16, 8)
+
+
+    ];
+
+    s_zombie  = [
         new Sprite(img, 16 * 0,  16 * 1, 16, 16),
         new Sprite(img, 16 * 1,  16 * 1, 16, 16)
 

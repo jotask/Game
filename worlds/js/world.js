@@ -1,9 +1,8 @@
 var CELLTYPE = {
-    WALL: 0, AIR: 1
+    WALL: 0, AIR: 1, DOOR: 2
 };
 
 function World(){
-
 
     var cells = [];
 
@@ -23,7 +22,21 @@ function World(){
                 cells[i][j] = new Cell(i, j, type);
             }
         }
+        this.createDoor();
     };
+
+    this.collideWithDoor = function (player){
+        return Boolean(player.bounds.collideWith(door.cell.bounds));
+    }
+
+    this.createDoor = function () {
+        var c = this.spawnCell();
+        var cellDoor = new Cell(c.position.x, c.position.y, CELLTYPE.DOOR);
+        door = new Door(c);
+        cellDoor.setDoor(door);
+        cells[c.position.x][c.position.y] = cellDoor;
+        delete c;
+    }
 
     this.getCells = function (xReal, yReal){
 
@@ -46,6 +59,12 @@ function World(){
         }
         return cellsTmp;
     };
+
+    this.getCellsReal = function(xReal, yReal){
+        var x = parseInt((width * xReal) / (Cell.SIZE * width));
+        var y = parseInt((height * yReal) / (Cell.SIZE * height));
+        return this.getCell(x, y);
+    }
 
     this.getCell = function(x, y) {
         var c;
@@ -83,6 +102,10 @@ function World(){
         return false;
 
     };
+
+    this.openDoor = function () {
+        door.activateDoor();
+    }
 
     this.spawnCell = function () {
 
@@ -138,6 +161,17 @@ function World(){
         }
     }
 
+    function Door(c){
+
+        this.active = 0;
+        this.cell = c;
+
+        this.activateDoor = function (){
+            this.active = 1;
+        }
+
+    }
+
 }
 
 Cell.SIZE = 32;
@@ -154,11 +188,16 @@ function Cell(x, y, t){
         var y = this.position.y * Cell.SIZE;
         if (this.type === CELLTYPE.WALL) {
             s_world_block.draw(x, y);
-            // ctx.drawImage(s_world_block.img, x, y);
         }else if (this.type === CELLTYPE.AIR) {
             s_world_air.draw(x, y);
+        }else if (this.type === CELLTYPE.DOOR) {
+            s_door[this.door.active].draw(x, y);
         }
     };
+
+    this.setDoor = function (d){
+        this.door = d;
+    }
 
     this.debug = function () {
         if (this.type === CELLTYPE.WALL) {
@@ -168,6 +207,9 @@ function Cell(x, y, t){
             ctx.beginPath();
             ctx.rect(this.bounds.x, this.bounds.y, Cell.SIZE,Cell.SIZE);
             ctx.stroke();
+        }else if (this.type === CELLTYPE.DOOR) {
+            ctx.fillStyle = "blue";
+            this.bounds.debug();
         }
     };
 
