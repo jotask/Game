@@ -15,7 +15,7 @@ function Vector2(x, y){
     this.dispose = function(){
         delete this.x;
         delete this.y;
-    }
+    };
 
 }
 
@@ -45,6 +45,36 @@ function Bound(xP, yP, width, height){
         return Boolean(one && two && three && four);
 
     };
+
+    this.fixPosition = function (other) {
+
+        var one = Boolean(this.x < (other.x + other.width));
+        var two = Boolean((this.x + this.width) > other.x);
+        var three = Boolean(this.y < (other.y + other.height));
+        var four = Boolean((this.y + this.height) > other.y);
+
+        var final = new Vector2(0,0);
+
+        const tmp = 50;
+
+        if(one){
+            final.x += tmp;
+        }
+
+        if(two){
+            final.x -= tmp;
+        }
+        if(three){
+            final.x += tmp;
+        }
+
+        if(four){
+            final.x -= tmp;
+        }
+
+        return final;
+
+    }
 
 }
 

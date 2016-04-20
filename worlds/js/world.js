@@ -6,6 +6,10 @@ function World(){
 
     var cells = [];
 
+    var door;
+
+    const MAX = 10;
+
     const width = 16;
     const height = 15;
 
@@ -14,16 +18,27 @@ function World(){
             cells[i] = [];
             for(var j = 0; j < height; j++) {
                 var type = CELLTYPE.AIR;
-                if(i === 0 || j === 0 || i === width - 1 || j == height - 1){
-                    type = CELLTYPE.WALL;
-                }else if(i === 7 && j === 7){
+                if(i === 0 || j === 0 || i === width - 1 || j == height - 1) {
                     type = CELLTYPE.WALL;
                 }
                 cells[i][j] = new Cell(i, j, type);
             }
         }
+        this.randomObstacle();
         this.createDoor();
     };
+
+    this.randomObstacle = function(){
+        const times = getRandomInt(0, MAX);
+        for (var i = 0; i < times; i++){
+            var x = getRandomInt(1, width - 1);
+            var y = getRandomInt(1, height - 1);
+            var c = this.getCell(x, y);
+            var n = new Cell(c.position.x, c.position.y, CELLTYPE.WALL);
+            delete cells[x][y];
+            cells[x][y] = n;
+        }
+    }
 
     this.collideWithDoor = function (player){
         return Boolean(player.bounds.collideWith(door.cell.bounds));
@@ -39,7 +54,6 @@ function World(){
     }
 
     this.getCells = function (xReal, yReal){
-
 
         var x = parseInt((width * xReal) / (Cell.SIZE * width));
         var y = parseInt((height * yReal) / (Cell.SIZE * height));
@@ -64,7 +78,7 @@ function World(){
         var x = parseInt((width * xReal) / (Cell.SIZE * width));
         var y = parseInt((height * yReal) / (Cell.SIZE * height));
         return this.getCell(x, y);
-    }
+    };
 
     this.getCell = function(x, y) {
         var c;
@@ -76,8 +90,64 @@ function World(){
 
     this.collide = function(player) {
 
+        var nextBounds = new Bound(player.bounds.x, player.bounds.y, player.bounds.width, player.height);
+        nextBounds.x += player.velocity.x;
+        nextBounds.y += player.velocity.y;
+
+        var cells = this.getCells(nextBounds.x, nextBounds.y);
+
+        for(var i = 0; i < cells.length; i++) {
+
+            var nextC = cells[i];
+
+            if (isNull(nextC)) {
+                console.error("undefinied || null");
+                continue;
+            };
+
+            if (nextC.type === CELLTYPE.WALL) {
+                if (!Boolean(nextBounds.collideWith(nextC.bounds))) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+
+    };
+
+    this.collideX = function(player) {
+
         var nextP = new Vector2(player.position.x, player.position.y);
         nextP.x += player.velocity.x;
+
+        var cells = this.getCells(nextP.x, nextP.y);
+
+        for(var i = 0; i < cells.length; i++) {
+
+            var nextC = cells[i];
+
+            if (nextC === 'undefined' || nextC == null) {
+                console.error("undefinied || null");
+                continue;
+            };
+
+            if (nextC.type === CELLTYPE.WALL) {
+                if (Boolean(player.bounds.collideWith(nextC.bounds))) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+
+    };
+
+    this.collideY = function(player) {
+
+        var nextP = new Vector2(player.position.x, player.position.y);
         nextP.y += player.velocity.y;
 
         var cells = this.getCells(nextP.x, nextP.y);

@@ -89,6 +89,7 @@ function Spider(){
     };
 
     this.debug = function (){
+        ctx.fillStyle = "yellow";
         this.getBounds().debug();
     };
 
@@ -135,16 +136,20 @@ function RandomMovement(entity){
                 break;
         }
 
-        // check if position is valid
+        // Check if position is valid
         var cells = world.getCells(position.x + velocity.x, position.y + velocity.y);
         for(var i = 0; i < cells.length; i++) {
             var nextCell = cells[i];
             if (!isNull(nextCell) && nextCell.type === CELLTYPE.WALL) {
-                delete direction;
-                direction = new Vector2(0, 0);
+                direction = test();
             }
         }
         return direction;
+    };
+
+    var test = function(){
+        // FIXME avoid when collide and stop move
+        return new Vector2(0,0);
     };
 
     this.update = function (delta){
@@ -152,7 +157,7 @@ function RandomMovement(entity){
             position.x += velocity.x;
             position.y += velocity.y;
         }
-    }
+    };
 
 }
 
@@ -167,7 +172,7 @@ function Zombie(){
     };
 
     this.randomUpdate = function(){
-        move.randomUpdate();
+        // move.randomUpdate();
     };
 
     this.setPosition = function (xx, yy){
@@ -184,6 +189,7 @@ function Zombie(){
     };
 
     this.debug = function (){
+        ctx.fillStyle = "red";
         enemy.bounds.debug();
     };
 

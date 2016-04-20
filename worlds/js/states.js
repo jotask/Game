@@ -153,6 +153,8 @@ function Menu(){
 
 function Play(){
 
+    var score;
+
     var level = 23;
 
     this.world;
@@ -162,7 +164,6 @@ function Play(){
 
     this.init = function () {
         this.world = new World();
-        this.world.init();
         this.player = new Player();
         this.player.init();
 
@@ -171,13 +172,17 @@ function Play(){
         this.manager = new EntityManager(this.world);
         this.manager.init();
 
+        score = new Score();
+
         this.reset();
 
         this.manager.addXEnemy(level);
 
     };
 
-    this.onClick = function (e){};
+    this.onClick = function (e){
+        this.player.onClick(e);
+    };
 
     this.reset = function(){
 
@@ -192,8 +197,8 @@ function Play(){
 
     this.update = function(delta){
         this.world.update(delta);
-        this.player.update(delta);
         this.manager.update(delta);
+        this.player.update(delta);
         this.gui.update(delta);
 
         this.manager.collides(this.player);
@@ -215,8 +220,8 @@ function Play(){
 
     this.render = function (){
         this.world.render();
-        this.player.render();
         this.manager.render();
+        this.player.render();
         this.gui.render();
     };
 
@@ -228,13 +233,11 @@ function Play(){
         ctx.font = "10px Arial";
         ctx.fontcolor = "orange";
 
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = 0.5;
         this.world.debug(ctx);
-        this.player.debug(ctx);
         this.manager.debug(ctx);
+        this.player.debug(ctx);
         this.gui.debug(ctx);
-        ctx.fillStyle = "blue";
-        // world.debugCoord(ctx);
         ctx.globalAlpha = 1;
 
     };
@@ -365,4 +368,15 @@ function Play(){
 
     }
 
+}
+
+function Score(){
+    var score = 0;
+    this.getScore = function () {
+        return score;
+    }
+
+    this.addScore = function (s) {
+        score += s;
+    }
 }
