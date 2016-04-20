@@ -8,6 +8,9 @@ var
 
     s_spider,
 
+    s_bomb,
+
+    s_logo,
     s_door,
 
     s_player,
@@ -49,7 +52,7 @@ Sprite.prototype.draw = function(x, y) {
  */
 function initSprites(img) {
 
-    s_splash = new Sprite(img, 32,  0, 16, 16);
+    s_splash = new Sprite(img, 32,  0, 16, 15);
 
     s_door = [
         new Sprite(img, 0,  16 * 3, 16, 16),
@@ -58,7 +61,7 @@ function initSprites(img) {
 
     s_play_btn = new Sprite(img, 32,  16, 74, 23);
 
-    s_menu_btn = new Sprite(img, 32,  39, 74, 23);
+    s_menu_btn = new Sprite(img, 32,  40, 74, 23);
 
     s_player  = [
         new Sprite(img, 0,  0, 16, 16),
@@ -78,6 +81,10 @@ function initSprites(img) {
         new Sprite(img, 16,  16, 16, 16)
 
     ];
+
+    s_bomb = new Sprite(img, 49, 0, 16, 16);
+
+    s_logo = new Sprite(img, 32, 64, 192, 88);
 
     s_world_block = new Sprite(img, 16,  16 * 2, 16, 16);
     s_world_air =   new Sprite(img, 0,  16 * 2, 16, 16);

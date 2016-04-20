@@ -162,12 +162,12 @@ function EntityManager(w){
         entities.push(e);
     };
 
-    this.collides = function(player){
+    this.collides = function(b){
         for(var i = 0; i < entities.length; i++){
-            if(Boolean(player.bounds.collideWithEntity(entities[i].getBounds()))){
+            if(Boolean(b.collideWithEntity(entities[i].getBounds()))){
                 document.getElementById("audio_kill").play();
                 gsm.getState().score.addScore(Number(1));
-                removeEnemy(entities[i]);
+                this.removeEnemy(entities[i]);
             }
         }
     };
@@ -176,7 +176,7 @@ function EntityManager(w){
         return Boolean(entities.length <= 0);
     };
 
-    var removeEnemy = function (e) {
+    this.removeEnemy = function (e) {
         while (entities.indexOf(e) !== -1) {
             entities.splice(entities.indexOf(e), 1);
         }
@@ -324,6 +324,116 @@ function Score(){
 
         // localStorage.setItem("high", high);
     }
+
+    this.dispose = function () {
+
+    }
+
+}
+
+function WeaponManager (){
+
+    var bombs = [];
+
+    this.init = function (){
+
+    };
+
+    this.newBomb = function (p) {
+        var bomb = new Bomb(new Vector2(p.x, p.y));
+        addBomb(bomb);
+    }
+
+    var addBomb = function (e){
+        bombs.push(e);
+    };
+
+    this.isEmpty = function () {
+        return Boolean(bombs.length <= 0);
+    };
+
+    var removeBomb = function (e) {
+        while (bombs.indexOf(e) !== -1) {
+            bombs.splice(bombs.indexOf(e), 1);
+        }
+    };
+
+    this.reset = function (level) {
+        // TODO better delete enemies
+        bombs = [];
+    };
+
+    this.update = function (){
+        if(!this.isEmpty()) {
+            for (var i = 0; i < bombs.length; i++) {
+                if(isNull(bombs[i])){
+                    continue;
+                }
+                if(bombs[i].needsExplode()){
+                    bombs[i].explode();
+                    document.getElementById("sound_explosion").play();
+                    removeBomb(bombs[i]);
+                    continue;
+                }
+                bombs[i].update();
+            }
+        }
+    };
+
+    this.render = function (){
+        if(!this.isEmpty()) {
+            for (var i = 0; i < bombs.length; i++) {
+                bombs[i].render();
+            }
+        }
+    };
+
+    this.debug = function (){
+        if(!this.isEmpty()) {
+            for(var i = 0; i < bombs.length; i++){
+                bombs[i].debug();
+            }
+        }
+    };
+
+    this.dispose = function (){
+
+    }
+}
+
+function Bomb(p){
+
+    const SIZE = 200;
+    const timeToExplode = 100;
+    var position = p;
+
+    var currentTime = 0;
+
+    this.update = function () {
+        currentTime += 1;
+    };
+
+    this.render = function () {
+        s_bomb.draw(position.x,position.y);
+    };
+
+    this.needsExplode = function(){
+        // FIXME
+        // return false;
+        return Boolean(currentTime > timeToExplode);
+    };
+
+    this.explode = function () {
+        // TODO
+        var bounds = new Bound(position.x - (s_bomb.width), position.y - (s_bomb.height), s_bomb.width * 4, s_bomb.height * 4);
+        // GET PLAYER SURROUND
+        gsm.getState().entityManager.collides(bounds);
+
+    };
+
+    this.debug = function () {
+        ctx.fillRect(position.x - (s_bomb.width), position.y - (s_bomb.height), s_bomb.width * 4, s_bomb.height * 4);
+    };
 
     this.dispose = function () {
 

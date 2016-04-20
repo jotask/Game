@@ -90,4 +90,4 @@ function getMousePos(evt) {
 
 var then = Date.now();
 
-load();
+// load();

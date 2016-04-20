@@ -34,7 +34,7 @@ function Player(){
     };
 
     this.onClick = function (e){
-        attack.attack(e);
+        // attack.attack(e);
     };
 
     this.update = function (delta){
@@ -93,16 +93,8 @@ function Player(){
     };
 
     this.dispose = function () {
-
+        
     };
-    //
-    // this.hit = function (damage) {
-    //     health -= damage;
-    // };
-    //
-    // this.getHealth = function(){
-    //     return health;
-    // }
 
 }
 

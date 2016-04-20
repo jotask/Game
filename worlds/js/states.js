@@ -63,7 +63,7 @@ function GameStateManager(){
 
 function Splash(){
 
-    const TIME = 3;
+    const TIME = 2;
 
     var position;
     var start;
@@ -98,7 +98,9 @@ function Splash(){
     this.render = function (){
         ctx.save();
         ctx.globalAlpha = opacity;
-        s_splash.draw(position.x, position.y );
+        ctx.scale(8,8);
+        s_splash.draw(15, 10);
+        ctx.scale(1,1);
         ctx.globalAlpha = 1;
         ctx.restore();
     };
@@ -120,7 +122,7 @@ function Menu(){
     this.init = function () {
         var x = canvas.width / 2 - (s_play_btn.width / 2) / 2;
         var y = canvas.height / 2 - (s_play_btn.height / 2) / 2;
-        play_button = new Button(s_play_btn, x, y);
+        play_button = new Button(s_play_btn, x, y + 70);
     };
 
     this.onClick = function (e){
@@ -133,6 +135,10 @@ function Menu(){
     };
 
     this.render = function (){
+        ctx.save();
+        ctx.scale(2,2);
+        s_logo.draw(40,10);
+        ctx.restore();
         play_button.render();
     };
 
@@ -161,7 +167,7 @@ function Play() {
     const init_seconds = 3;
 
     // FIXME
-    var level = 0;
+    var level = 23;
 
     this.init = function () {
         this.world = new World();
@@ -170,8 +176,11 @@ function Play() {
 
         this.gui = new Gui(this);
 
-        this.manager = new EntityManager(this.world);
-        this.manager.init();
+        this.entityManager = new EntityManager(this.world);
+        this.entityManager.init();
+
+        this.bombManager = new WeaponManager();
+        this.bombManager.init();
 
         this.score = new Score();
 
@@ -181,6 +190,7 @@ function Play() {
 
     this.onClick = function (e) {
         this.player.onClick(e);
+        this.bombManager.newBomb(this.player.position);
     };
 
     this.reset = function () {
@@ -190,9 +200,10 @@ function Play() {
         var c = this.world.spawnCell();
         this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
 
-        this.manager.reset(level);
+        this.entityManager.reset(level);
+        this.bombManager.reset();
 
-        this.manager.addXEnemy(level);
+        this.entityManager.addXEnemy(level);
 
         this.timer = new Time();
         this.timer.startTimer(init_seconds + (level));
@@ -202,11 +213,12 @@ function Play() {
     this.update = function (delta) {
         this.world.update(delta);
         this.player.update(delta);
-        this.manager.update(delta);
+        this.entityManager.update(delta);
+        this.bombManager.update();
 
-        this.manager.collides(this.player);
+        this.entityManager.collides(this.player.bounds);
 
-        if (this.manager.isEmpty()) {
+        if (this.entityManager.isEmpty()) {
             this.world.activateDoor();
             if (this.world.collideWithDoor(this.player)) {
                 this.score.addScore(POINTS_NEXTLEVEL);
@@ -231,7 +243,8 @@ function Play() {
 
     this.render = function () {
         this.world.render();
-        this.manager.render();
+        this.entityManager.render();
+        this.bombManager.render();
         this.player.render();
         this.gui.render();
     };
@@ -246,7 +259,8 @@ function Play() {
 
         ctx.globalAlpha = 0.5;
         this.world.debug(ctx);
-        this.manager.debug(ctx);
+        this.entityManager.debug(ctx);
+        this.bombManager.debug();
         this.player.debug(ctx);
         this.gui.debug(ctx);
         ctx.globalAlpha = 1;
@@ -260,8 +274,11 @@ function Play() {
         this.player.dispose();
         delete this.player;
 
-        this.manager.dispose();
-        delete this.manager;
+        this.entityManager.dispose();
+        delete this.entityManager;
+
+        this.bombManager.dispose();
+        delete this.bombManager;
 
         this.gui.dispose();
         delete this.gui;
@@ -302,13 +319,19 @@ function GameOver(){
     };
 
     this.render = function (){
+
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+
         ctx.fillStyle = 'red';
         ctx.font = '70pt Calibri';
-        ctx.fillText('GameOver!', canvas.width / 2 - (220), canvas.height / 2 - (100));
+        ctx.fillText('GameOver!', canvas.width / 2, canvas.height / 2 - (150));
         ctx.fillStyle = 'white';
         ctx.font = '40pt Calibri';
-        ctx.fillText('Your Score is: ' + score.getScore(), canvas.width / 2 - (170), canvas.height / 2 - (30));
-        ctx.fillText('HighScore: ' + score.getBests(), canvas.width / 2 - (130), canvas.height / 2 - (-50));
+        ctx.fillText('Your Score is: ' + score.getScore(), canvas.width / 2, canvas.height / 2 - (20));
+        ctx.fillText('HighScore: ' + score.getBests(), canvas.width / 2, canvas.height / 2 - (-40));
         // ctx.fillText('Hello!', canvas.width / 2 - (50), canvas.height / 2 - (100));
 
         menu.render();
