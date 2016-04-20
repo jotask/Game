@@ -7,19 +7,20 @@ function Player(){
 
     var attack;
 
-    var health = 100;
+    // var health = 100;
 
     var frame = 0;
     const animation = [0,1];
 
-    const offset = 7;
+    const offset = 0;
 
     this.init = function (){
 
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0,0);
 
-        this.bounds = new Bound(this.position.x, this.position.y, size - offset*2, size - offset*2);
+        // Problem is here
+        this.bounds = new Bound(this.position.x + offset, this.position.y + offset, size - (offset*2), size - offset*2);
 
         attack = new SwordAttack(this);
 
@@ -28,12 +29,12 @@ function Player(){
     this.setPosition = function (xx, yy){
         this.position.x = xx;
         this.position.y = yy;
-        this.bounds.x = xx - offset;
-        this.bounds.y = yy - offset;
+        this.bounds.x = xx + offset;
+        this.bounds.y = yy + offset;
     };
 
-    this.onClick = function (){
-        attack.attack();
+    this.onClick = function (e){
+        attack.attack(e);
     };
 
     this.update = function (delta){
@@ -56,17 +57,20 @@ function Player(){
 
         var world = gsm.getState().world;
 
-        if(!Boolean(world.collide(this))) {
+        var collide = Boolean(world.collide(this));
+
+        if(!collide) {
+            // No collide
             this.position.x += this.velocity.x;
             this.position.y += this.velocity.y;
+
+            // handle update
+            this.bounds.setPosition(this.position.x + offset, this.position.y + offset);
         }
 
         if(!Boolean(this.velocity.isZero())){
             updateAnimation();
         }
-
-        // handle update
-        this.bounds.setPosition(this.position.x + offset, this.position.y + offset);
 
         attack.update();
 
@@ -82,22 +86,31 @@ function Player(){
     };
 
     this.debug = function (){
+        // TODO
         ctx.fillStyle = "cyan";
         this.bounds.debug();
         attack.debug();
     };
 
-    this.hit = function (damage) {
-        health -= damage;
-    }
+    this.dispose = function () {
 
-    this.getHealth = function(){
-        return health;
-    }
+    };
+    //
+    // this.hit = function (damage) {
+    //     health -= damage;
+    // };
+    //
+    // this.getHealth = function(){
+    //     return health;
+    // }
 
 }
 
 function SwordAttack(jugador){
+
+    var direction = {
+        TOP:0, BOTTOM:1, LEFT:2, RIGHT:3
+    };
 
     const player = jugador;
 
@@ -107,7 +120,7 @@ function SwordAttack(jugador){
         position: new Vector2(0,0),
         attackTime: 10,
         width: 16,
-        height: 100,
+        height: Cell.SIZE * 2,
         visible: false
     };
 
@@ -119,25 +132,52 @@ function SwordAttack(jugador){
             currentAttackTime += 1;
             if(currentAttackTime >= sword.attackTime){
                 sword.visible = false;
-                console.log("done");
             }
-        }else{
-
         }
     };
 
-    this.attack = function (){
+    var getDirection = function(e){
+        var rect = canvas.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var right = true;
+        var bottom = true;
+        if(x < sword.position.x)
+            right = false;
+        if(y < sword.position.y)
+            bottom = false;
+
+        if(right && bottom){
+            return direction.RIGHT;
+        }else if(right && !bottom){
+            return direction.BOTTOM;
+        }else if(!right && bottom){
+            return direction.LEFT;
+        }else if(!right && !bottom){
+            return direction.TOP;
+        }
+
+        return 0;
+    };
+
+    var attackDirection = function(dir){
+        console.log(dir);
+    }
+
+    this.attack = function (e){
         var p = player.position;
         sword.position.x = p.x;
         sword.position.y = p.y;
         sword.visible = true;
         currentAttackTime = 0;
+        attackDirection(getDirection(e));
     };
 
+    var rotate = 0;
     this.debug = function () {
         if(sword.visible){
             ctx.fillRect(sword.position.x, sword.position.y, sword.width, sword.height);
-            // console.log("visible");
+
         }
     }
 

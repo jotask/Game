@@ -8,10 +8,12 @@ function World(){
 
     var door;
 
-    const MAX = 10;
+    var MAX = 2;
 
     const width = 16;
     const height = 15;
+
+    // FIXME delete debug
 
     this.init = function (){
         for(var i = 0; i < width; i++) {
@@ -28,6 +30,11 @@ function World(){
         this.createDoor();
     };
 
+    this.reset = function (level){
+        MAX++;
+        this.init();
+    }
+
     this.randomObstacle = function(){
         const times = getRandomInt(0, MAX);
         for (var i = 0; i < times; i++){
@@ -38,11 +45,11 @@ function World(){
             delete cells[x][y];
             cells[x][y] = n;
         }
-    }
+    };
 
     this.collideWithDoor = function (player){
-        return Boolean(player.bounds.collideWith(door.cell.bounds));
-    }
+        return Boolean(player.bounds.collideWithEntity(door.cell.bounds));
+    };
 
     this.createDoor = function () {
         var c = this.spawnCell();
@@ -50,8 +57,7 @@ function World(){
         door = new Door(c);
         cellDoor.setDoor(door);
         cells[c.position.x][c.position.y] = cellDoor;
-        delete c;
-    }
+    };
 
     this.getCells = function (xReal, yReal){
 
@@ -74,12 +80,6 @@ function World(){
         return cellsTmp;
     };
 
-    this.getCellsReal = function(xReal, yReal){
-        var x = parseInt((width * xReal) / (Cell.SIZE * width));
-        var y = parseInt((height * yReal) / (Cell.SIZE * height));
-        return this.getCell(x, y);
-    };
-
     this.getCell = function(x, y) {
         var c;
         if (x >= 0 && y >= 0 && x < width && y < height){
@@ -88,23 +88,29 @@ function World(){
         return c;
     };
 
+    var nextBounds;
+    var celulas;
+
     this.collide = function(player) {
 
-        var nextBounds = new Bound(player.bounds.x, player.bounds.y, player.bounds.width, player.height);
-        nextBounds.x += player.velocity.x;
-        nextBounds.y += player.velocity.y;
+        nextBounds = new Bound(player.bounds.x + player.velocity.x, player.bounds.y + player.velocity.y, player.bounds.width, player.bounds.height);
 
-        var cells = this.getCells(nextBounds.x, nextBounds.y);
+        // FIXME
+        // console.log(player.bounds.x, player.bounds.y, player.bounds.width, player.bounds.height);
 
-        for(var i = 0; i < cells.length; i++) {
+        // nextBounds.x += player.velocity.x;
+        // nextBounds.y += player.velocity.y;
 
-            var nextC = cells[i];
+        celulas = this.getCells(nextBounds.x, nextBounds.y);
+
+        for(var i = 0; i < celulas.length; i++) {
+
+            var nextC = celulas[i];
 
             if (isNull(nextC)) {
                 console.error("undefinied || null");
                 continue;
-            };
-
+            }
             if (nextC.type === CELLTYPE.WALL) {
                 if (!Boolean(nextBounds.collideWith(nextC.bounds))) {
                     return true;
@@ -116,66 +122,6 @@ function World(){
         return false;
 
     };
-
-    this.collideX = function(player) {
-
-        var nextP = new Vector2(player.position.x, player.position.y);
-        nextP.x += player.velocity.x;
-
-        var cells = this.getCells(nextP.x, nextP.y);
-
-        for(var i = 0; i < cells.length; i++) {
-
-            var nextC = cells[i];
-
-            if (nextC === 'undefined' || nextC == null) {
-                console.error("undefinied || null");
-                continue;
-            };
-
-            if (nextC.type === CELLTYPE.WALL) {
-                if (Boolean(player.bounds.collideWith(nextC.bounds))) {
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
-
-    };
-
-    this.collideY = function(player) {
-
-        var nextP = new Vector2(player.position.x, player.position.y);
-        nextP.y += player.velocity.y;
-
-        var cells = this.getCells(nextP.x, nextP.y);
-
-        for(var i = 0; i < cells.length; i++) {
-
-            var nextC = cells[i];
-
-            if (nextC === 'undefined' || nextC == null) {
-                console.error("undefinied || null");
-                continue;
-            };
-
-            if (nextC.type === CELLTYPE.WALL) {
-                if (Boolean(player.bounds.collideWith(nextC.bounds))) {
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
-
-    };
-
-    this.openDoor = function () {
-        door.activateDoor();
-    }
 
     this.spawnCell = function () {
 
@@ -221,6 +167,14 @@ function World(){
                 cells[i][j].debug();
             }
         }
+        ctx.fillStyle = "red";
+        nextBounds.debug();
+
+        // ctx.globalAlpha = 1;
+        ctx.fillStyle = "blue";
+        for(var i = 0; i < celulas.length; i++) {
+            celulas[i].debug();
+        }
     };
 
     this.debugCoord = function(){
@@ -229,6 +183,10 @@ function World(){
                 cells[i][j].text();
             }
         }
+    };
+
+    this.activateDoor = function (){
+        door.activateDoor();
     }
 
     function Door(c){
@@ -240,6 +198,10 @@ function World(){
             this.active = 1;
         }
 
+    }
+
+    this.dispose = function () {
+        
     }
 
 }
@@ -254,8 +216,8 @@ function Cell(x, y, t){
     this.type = t;
 
     this.render = function(){
-        var x = this.position.x * Cell.SIZE;
-        var y = this.position.y * Cell.SIZE;
+        var x = this.bounds.x;
+        var y = this.bounds.y;
         if (this.type === CELLTYPE.WALL) {
             s_world_block.draw(x, y);
         }else if (this.type === CELLTYPE.AIR) {
@@ -267,7 +229,7 @@ function Cell(x, y, t){
 
     this.setDoor = function (d){
         this.door = d;
-    }
+    };
 
     this.debug = function () {
         if (this.type === CELLTYPE.WALL) {
@@ -275,7 +237,7 @@ function Cell(x, y, t){
             this.bounds.debug();
         }else if (this.type === CELLTYPE.AIR) {
             ctx.beginPath();
-            ctx.rect(this.bounds.x, this.bounds.y, Cell.SIZE,Cell.SIZE);
+            ctx.rect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
             ctx.stroke();
         }else if (this.type === CELLTYPE.DOOR) {
             ctx.fillStyle = "blue";

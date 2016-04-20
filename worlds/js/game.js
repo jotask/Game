@@ -1,8 +1,8 @@
 
-const firstState = states.Play;
+const firstState = states.Splash;
 const WIDTH = 512;
 const HEIGHT = 480;
-var debug = true;
+var debug = false;
 
 var canvas;
 var ctx;
@@ -15,11 +15,9 @@ var frames = 0;
 var keysDown = {};
 
 var load = function(){
-    var spriteSheetReady = false;
     var spriteSheet = new Image();
     spriteSheet.onload = function(){
         initSprites(this);
-        spriteSheetReady = true;
         run();
     };
     spriteSheet.src = "img/sprite.png";
@@ -72,8 +70,11 @@ var update = function(delta){
 };
 
 var render = function(){
+    // clear screen
+    ctx.fillStyle = "black";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillRect(0,0,canvas.width, canvas.height);
+
     gsm.render(ctx);
     if(Boolean(debug))
         gsm.debug(ctx);

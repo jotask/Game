@@ -1,7 +1,8 @@
 const states = {
     Splash: 0,
     Menu: 1,
-    Play: 2
+    Play: 2,
+    GameOver: 3
 };
 
 function GameStateManager(){
@@ -25,6 +26,10 @@ function GameStateManager(){
                 break;
             case states.Play:
                 currentState = new Play();
+                currentState.init();
+                break;
+            case states.GameOver:
+                currentState = new GameOver();
                 currentState.init();
                 break;
         }
@@ -151,85 +156,91 @@ function Menu(){
 
 }
 
-function Play(){
+function Play() {
+    const POINTS_NEXTLEVEL = 10;
+    const init_seconds = 3;
 
-    var score;
-
-    var level = 23;
-
-    this.world;
-    this.player;
-    this.gui;
-    this.manager;
+    // FIXME
+    var level = 0;
 
     this.init = function () {
         this.world = new World();
         this.player = new Player();
         this.player.init();
 
-        this.gui = new Gui();
+        this.gui = new Gui(this);
 
         this.manager = new EntityManager(this.world);
         this.manager.init();
 
-        score = new Score();
+        this.score = new Score();
 
         this.reset();
 
-        this.manager.addXEnemy(level);
-
     };
 
-    this.onClick = function (e){
+    this.onClick = function (e) {
         this.player.onClick(e);
     };
 
-    this.reset = function(){
+    this.reset = function () {
 
-        this.world.init();
+        this.world.reset(level);
 
-         var c = this.world.spawnCell();
-         this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
+        var c = this.world.spawnCell();
+        this.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
 
-         this.manager.reset(level);
+        this.manager.reset(level);
+
+        this.manager.addXEnemy(level);
+
+        this.timer = new Time();
+        this.timer.startTimer(init_seconds + (level));
 
     };
 
-    this.update = function(delta){
+    this.update = function (delta) {
         this.world.update(delta);
-        this.manager.update(delta);
         this.player.update(delta);
-        this.gui.update(delta);
+        this.manager.update(delta);
 
         this.manager.collides(this.player);
 
-        if(this.manager.isEmpty()){
-            this.world.openDoor();
-            if(this.world.collideWithDoor(this.player)){
+        if (this.manager.isEmpty()) {
+            this.world.activateDoor();
+            if (this.world.collideWithDoor(this.player)) {
+                this.score.addScore(POINTS_NEXTLEVEL);
                 this.nextLevel();
             }
         }
 
+        this.gui.update(delta);
+
+        if(this.timer.isFinished()){
+            gsm.changeState(states.GameOver);
+        }
+
     };
 
-    this.nextLevel = function (){
+    this.nextLevel = function () {
+        document.getElementById("audio_next_level").play();
         level++;
+        this.score.saveScore();
         this.reset();
-        this.manager.addXEnemy(level);
-    }
+    };
 
-    this.render = function (){
+    this.render = function () {
         this.world.render();
         this.manager.render();
         this.player.render();
         this.gui.render();
     };
 
-    this.debug = function (){
+    this.debug = function () {
 
         ctx.fillStyle = "red";
-        ctx.strokeStyle="green";
-        ctx.lineWidth="1";
+        ctx.strokeStyle = "green";
+        ctx.lineWidth = "1";
         ctx.font = "10px Arial";
         ctx.fontcolor = "orange";
 
@@ -242,7 +253,7 @@ function Play(){
 
     };
 
-    this.dispose = function (){
+    this.dispose = function () {
         this.world.dispose();
         delete this.world;
 
@@ -254,129 +265,63 @@ function Play(){
 
         this.gui.dispose();
         delete this.gui;
+
+        this.score.saveAll();
+        this.score.dispose();
+        delete this.score;
     };
-
-    function EntityManager(w){
-
-        var ENEMY = {
-            SPIDER: 0,
-            ZOMBIE: 1
-        }
-
-        var world = w;
-
-        var entities = [];
-
-        this.init = function (){
-
-        };
-
-        this.addXEnemy = function (i){
-            for (var j = 0; j < i; j++) {
-                this.addNewEnemy();
-            }
-        };
-
-        this.addNewEnemy = function (){
-            var enemy = createRandomEnemy();
-            enemy.init();
-            var c = world.spawnCell();
-            enemy.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
-            addEntity(enemy);
-        };
-
-        var createRandomEnemy = function(){
-            var random;
-            random = getRandomInt(0,2);
-            // random = ENEMY.SPIDER;
-            switch (random){
-                case 0:
-                    return new Spider();
-                case 1:
-                    return new Zombie();
-                default:
-                    console.error("states.entityManager.createRandomEnemy");
-                    return new Enemy();
-            }
-        };
-
-        var addEntity = function (e){
-            entities.push(e);
-        };
-
-        this.collides = function(player){
-            for(var i = 0; i < entities.length; i++){
-                if(Boolean(player.bounds.collideWith(entities[i].getBounds()))){
-                    removeEnemy(entities[i]);
-                }
-            }
-        };
-
-        this.isEmpty = function () {
-            return Boolean(entities.length <= 0);
-        }
-
-        var removeEnemy = function (e) {
-            while (entities.indexOf(e) !== -1) {
-                entities.splice(entities.indexOf(e), 1);
-            }
-        }
-
-        this.reset = function (level) {
-            // TODO better delete enemies
-            entities = [];
-        };
-
-        this.update = function (delta){
-            if(!this.isEmpty()) {
-                for (var i = 0; i < entities.length; i++) {
-                    entities[i].update();
-                }
-                ;
-                randomUpdate();
-            }
-        };
-
-        var randomUpdate = function(){
-            var selection = 5;
-            for(var i = 0; i < selection; i++){
-                // get random entity
-                var r = getRandomInt(0,entities.length);
-                entities[r].randomUpdate();
-            }
-        };
-
-        this.render = function (){
-            if(!this.isEmpty()) {
-                for (var i = 0; i < entities.length; i++) {
-                    entities[i].render();
-                }
-            }
-        };
-
-        this.debug = function (){
-            if(!this.isEmpty()) {
-                for(var i = 0; i < entities.length; i++){
-                    entities[i].debug();
-                }
-            }
-        };
-
-        this.dispose = function (){
-
-        }
-
-    }
-
 }
 
-function Score(){
-    var score = 0;
-    this.getScore = function () {
-        return score;
-    }
+function GameOver(){
 
-    this.addScore = function (s) {
-        score += s;
-    }
+    var score;
+
+    var play;
+    var menu;
+
+    this.init = function () {
+        score = new Score();
+        score.loadAll();
+
+        var offsetX = 100;
+        var offsetY = 350;
+
+        play = new Button(s_play_btn, offsetX , offsetY);
+        menu = new Button(s_menu_btn, canvas.width - offsetX - (s_menu_btn.width / 2) ,offsetY);
+    };
+
+    this.onClick = function (e){
+        if(play.onClick(e))
+            gsm.changeState(states.Play);
+        if(menu.onClick(e))
+            gsm.changeState(states.Menu);
+    };
+
+    this.update = function() {
+
+    };
+
+    this.render = function (){
+        ctx.fillStyle = 'red';
+        ctx.font = '70pt Calibri';
+        ctx.fillText('GameOver!', canvas.width / 2 - (220), canvas.height / 2 - (100));
+        ctx.fillStyle = 'white';
+        ctx.font = '40pt Calibri';
+        ctx.fillText('Your Score is: ' + score.getScore(), canvas.width / 2 - (170), canvas.height / 2 - (30));
+        ctx.fillText('HighScore: ' + score.getBests(), canvas.width / 2 - (130), canvas.height / 2 - (-50));
+        // ctx.fillText('Hello!', canvas.width / 2 - (50), canvas.height / 2 - (100));
+
+        menu.render();
+        play.render();
+    };
+
+    this.debug = function (){
+        menu.debug();
+        play.debug();
+    };
+
+    this.dispose = function (){
+
+    };
+
 }

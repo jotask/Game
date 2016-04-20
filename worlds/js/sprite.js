@@ -4,6 +4,7 @@ var
     s_splash,
 
     s_play_btn,
+    s_menu_btn,
 
     s_spider,
 
@@ -33,7 +34,6 @@ function Sprite(img, x, y, width, height) {
 /**
  * Draw sprite ta canvas context
  *
- * @param  {CanvasRenderingContext2D} ctx context used for drawing
  * @param  {number} x   x-position on canvas to draw from
  * @param  {number} y   y-position on canvas to draw from
  */
@@ -52,32 +52,34 @@ function initSprites(img) {
     s_splash = new Sprite(img, 32,  0, 16, 16);
 
     s_door = [
-        new Sprite(img, 16 * 0,  16 * 3, 16, 16),
-        new Sprite(img, 16 * 1,  16 * 3, 16, 16)
+        new Sprite(img, 0,  16 * 3, 16, 16),
+        new Sprite(img, 16,  16 * 3, 16, 16)
     ];
 
-    s_play_btn = new Sprite(img, 32,  16, 74, 46);
+    s_play_btn = new Sprite(img, 32,  16, 74, 23);
+
+    s_menu_btn = new Sprite(img, 32,  39, 74, 23);
 
     s_player  = [
-        new Sprite(img, 16 * 0,  16 * 0, 16, 16),
-        new Sprite(img, 16 * 1,  16 * 0, 16, 16)
+        new Sprite(img, 0,  0, 16, 16),
+        new Sprite(img, 16,  0, 16, 16)
 
     ];
 
     s_spider  = [
         new Sprite(img, 0,  64, 16, 8),
-        new Sprite(img, 0,  81, 16, 8)
+        new Sprite(img, 0,  64 + 9, 16, 8)
 
 
     ];
 
     s_zombie  = [
-        new Sprite(img, 16 * 0,  16 * 1, 16, 16),
-        new Sprite(img, 16 * 1,  16 * 1, 16, 16)
+        new Sprite(img, 0,  16, 16, 16),
+        new Sprite(img, 16,  16, 16, 16)
 
     ];
 
-    s_world_block = new Sprite(img, 16 * 1,  16 * 2, 16, 16);
-    s_world_air =   new Sprite(img, 16 * 0,  16 * 2, 16, 16);
+    s_world_block = new Sprite(img, 16,  16 * 2, 16, 16);
+    s_world_air =   new Sprite(img, 0,  16 * 2, 16, 16);
 
 }

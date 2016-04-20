@@ -5,9 +5,9 @@ function Enemy(anim){
     var frame = 0;
     this.animation = anim;
 
-    this.position = new Vector2(200,360);
+    this.position = new Vector2(0,0);
 
-    this.bounds = new Bound(this.x, this.y, size, size);
+    this.bounds = new Bound(this.position.x, this.position.y, size, size);
 
     this.init = function (){
 
@@ -22,23 +22,23 @@ function Enemy(anim){
 
     this.randomUpdate = function(){
 
-    }
+    };
 
-    this.update = function (delta){
+    this.update = function (){
         this.bounds.setPosition(this.position.x, this.position.y);
         this.updateAnimation();
     };
 
     // FIXME fixanimations
     this.updateAnimation = function(){
-        var n = true ? 10: 5;
+        var n = 10;
         frame += frames % n === 0 ? 1: 0;
         frame %= this.animation.length;
     };
 
     this.getFrame = function(){
         return frame;
-    }
+    };
 
     this.render = function (){
 
@@ -51,20 +51,20 @@ function Enemy(anim){
 
     this.getBounds = function(){
         return this.bounds;
-    }
+    };
 
     this.setBounds = function (width, height) {
         this.bounds.width = width;
         this.bounds.height = height;
     }
 
-};
+}
 
 function Spider(){
 
     var enemy = new Enemy([0,1]);
 
-    var move = new RandomMovement(enemy);
+    var move = new RandomMovement(enemy, 4);
 
     this.init = function (){
         enemy.init();
@@ -81,7 +81,7 @@ function Spider(){
 
     this.update = function (delta){
         enemy.update(delta, this);
-        move.update();
+        move.update(enemy);
     };
 
     this.render = function (){
@@ -98,9 +98,9 @@ function Spider(){
     }
 }
 
-function RandomMovement(entity){
+function RandomMovement(entity, s){
 
-    const speed = 1;
+    const speed = s;
 
     var world = gsm.getState().world;
 
@@ -120,16 +120,16 @@ function RandomMovement(entity){
 
         switch (random){
             case 3:
-                direction.x += 1 * speed;
+                direction.x += speed;
                 break;
             case 2:
-                direction.x -= 1 * speed;
+                direction.x -= speed;
                 break;
             case 1:
-                direction.y += 1 * speed;
+                direction.y += speed;
                 break;
             case 0:
-                direction.y -= 1 * speed;
+                direction.y -= speed;
                 break;
             default:
                 console.error(random);
@@ -152,7 +152,7 @@ function RandomMovement(entity){
         return new Vector2(0,0);
     };
 
-    this.update = function (delta){
+    this.update = function (){
         if(!velocity.isZero()) {
             position.x += velocity.x;
             position.y += velocity.y;
@@ -165,14 +165,15 @@ function Zombie(){
 
     var enemy = new Enemy([0,1]);
 
-    var move = new RandomMovement(enemy);
+    var move = new RandomMovement(enemy, 1);
 
     this.init = function (){
         enemy.init();
     };
 
     this.randomUpdate = function(){
-        // move.randomUpdate();
+        // FIXME
+        move.randomUpdate();
     };
 
     this.setPosition = function (xx, yy){
