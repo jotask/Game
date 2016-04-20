@@ -35,7 +35,7 @@ function Gui(g){
 
     this.debug = function (){
 
-    }
+    };
 
     this.dispose = function () {
 

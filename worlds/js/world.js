@@ -33,7 +33,7 @@ function World(){
     this.reset = function (level){
         MAX++;
         this.init();
-    }
+    };
 
     this.randomObstacle = function(){
         const times = getRandomInt(0, MAX);
@@ -187,7 +187,7 @@ function World(){
 
     this.activateDoor = function (){
         door.activateDoor();
-    }
+    };
 
     function Door(c){
 

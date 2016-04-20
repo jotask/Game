@@ -30,7 +30,8 @@ var run = function(){
     ctx = canvas.getContext("2d");
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
-    document.body.appendChild(canvas);
+    // document.body.appendChild(canvas);
+    document.getElementById("contenido").appendChild(canvas);
 
     addListeners();
 

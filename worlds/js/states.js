@@ -84,11 +84,11 @@ function Splash(){
 
     };
 
-    this.onClick = function (e){
+    this.onClick = function (){
         gsm.changeState(states.Menu);
     };
 
-    this.update = function(delta) {
+    this.update = function() {
         if(end < new Date()){
             gsm.changeState(states.Menu);
         }
@@ -167,7 +167,7 @@ function Play() {
     const init_seconds = 3;
 
     // FIXME
-    var level = 23;
+    var level = 0;
 
     this.init = function () {
         this.world = new World();

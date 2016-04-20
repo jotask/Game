@@ -38,24 +38,11 @@ function Bound(xP, yP, w, h){
     this.collideWith = function(other){
 
         // FIXME
-
         var one = Boolean(this.x < (other.x + other.width));
-        // if(one)
-        //     console.log(this.x , (other.x + other.width));
-
         var two = Boolean((this.x + this.width)+100 > other.x);
-        // if(two)console.log((this.x - this.width) , other.x);
         var three = Boolean(this.y < (other.y + other.height));
-        // if(two)console.log((this.x - this.width) , other.x);
         var four = Boolean((this.y - this.height) > other.y);
-        // if(two)console.log((this.x - this.width) , other.x);
-
-        var b = Boolean(one && two && three && four);
-
-        // if(one)
-        //     console.log(one);
-
-        return b;
+        return Boolean(one && two && three && four);
 
     };
 
@@ -182,12 +169,12 @@ function EntityManager(w){
         }
     };
 
-    this.reset = function (level) {
+    this.reset = function () {
         // TODO better delete enemies
         entities = [];
     };
 
-    this.update = function (delta){
+    this.update = function (){
         if(!this.isEmpty()) {
             for (var i = 0; i < entities.length; i++) {
                 entities[i].update();
@@ -243,12 +230,12 @@ function Time(){
 
     this.setFinished = function (f){
         this.finished = Boolean(f);
-    }
+    };
 
     function startTimer(duration, t) {
-        timer = duration, minutes, seconds;
+        timer = duration;
         interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10)
+            minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
 
             minutes = minutes < 10 ? "0" + minutes : minutes;
@@ -265,9 +252,9 @@ function Time(){
 
     this.isFinished = function () {
         return Boolean(this.finished);
-    }
+    };
 
-    this.getMinutes = function () { return minutes;}
+    this.getMinutes = function () { return minutes;};
     this.getSeconds = function () { return seconds;}
 
 }
@@ -301,15 +288,15 @@ function Score(){
 
     this.loadHigh = function () {
         high = parseInt(localStorage.getItem("high"));
-    }
+    };
 
     this.loadPrevScore = function () {
         score = parseInt(localStorage.getItem("score"));
-    }
+    };
 
     this.saveScore = function () {
         localStorage.setItem("score", score);
-    }
+    };
 
     this.saveAll = function(){{{}}
         this.loadHigh();
@@ -323,7 +310,7 @@ function Score(){
         }
 
         // localStorage.setItem("high", high);
-    }
+    };
 
     this.dispose = function () {
 
@@ -342,7 +329,7 @@ function WeaponManager (){
     this.newBomb = function (p) {
         var bomb = new Bomb(new Vector2(p.x, p.y));
         addBomb(bomb);
-    }
+    };
 
     var addBomb = function (e){
         bombs.push(e);
@@ -358,7 +345,7 @@ function WeaponManager (){
         }
     };
 
-    this.reset = function (level) {
+    this.reset = function () {
         // TODO better delete enemies
         bombs = [];
     };

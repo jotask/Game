@@ -154,7 +154,7 @@ function SwordAttack(jugador){
 
     var attackDirection = function(dir){
         console.log(dir);
-    }
+    };
 
     this.attack = function (e){
         var p = player.position;
