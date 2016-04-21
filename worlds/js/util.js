@@ -54,10 +54,16 @@ function Bound(xP, yP, w, h){
         var two = Boolean((this.x + this.width) > other.x);
         var three = Boolean(this.y < (other.y + other.height));
         var four = Boolean((this.y + this.height) > other.y);
-
         return Boolean(one && two && three && four);
 
     };
+
+    this.dispose = function () {
+        delete this.x;
+        delete this.y;
+        delete this.width;
+        delete this.height;
+    }
 
 }
 
@@ -390,9 +396,20 @@ function WeaponManager (){
 
 function Bomb(p){
 
-    const SIZE = 200;
+    const SIZE = 4;
+
     const timeToExplode = 100;
     var position = p;
+
+    // TOP LEFT
+    var topLeft = new Bound((position.x  - (Cell.SIZE * SIZE)) + s_bomb.width,(position.y  - (Cell.SIZE * SIZE)) + s_bomb.height, Cell.SIZE * SIZE, Cell.SIZE * SIZE);
+    // // TOP RIGHT
+    var topRight = new Bound(position.x,(position.y  - (Cell.SIZE * SIZE)) + s_bomb.height, Cell.SIZE * SIZE, Cell.SIZE * SIZE);
+
+    // // BOTTOM LEFT
+    var bottomLelft = new Bound((position.x  - (Cell.SIZE * SIZE)) + s_bomb.width,position.y, Cell.SIZE * SIZE, Cell.SIZE * SIZE);
+    // // BOTTOM RIGHT
+    var bottomRight= new Bound(position.x, position.y, Cell.SIZE * SIZE, Cell.SIZE * SIZE);
 
     var currentTime = 0;
 
@@ -411,15 +428,34 @@ function Bomb(p){
     };
 
     this.explode = function () {
-        // TODO
-        var bounds = new Bound(position.x - (s_bomb.width), position.y - (s_bomb.height), s_bomb.width * 4, s_bomb.height * 4);
+        // FIXME
+
+        var state;
+        state = gsm.getState();
+
         // GET PLAYER SURROUND
-        gsm.getState().entityManager.collides(bounds);
+        state.entityManager.collides(topLeft);
+        state.entityManager.collides(topRight);
+        state.entityManager.collides(bottomLelft);
+        state.entityManager.collides(bottomRight);
+
+        var tmp = ( state.player.bounds.collideWithEntity(topLeft) ||
+                    state.player.bounds.collideWithEntity(topRight) ||
+                    state.player.bounds.collideWithEntity(bottomLelft) ||
+                    state.player.bounds.collideWithEntity(bottomRight));
+
+        if(tmp){
+            var c = state.world.spawnCell();
+            state.player.setPosition(c.position.x * Cell.SIZE, c.position.y * Cell.SIZE);
+        }
 
     };
 
     this.debug = function () {
-        ctx.fillRect(position.x - (s_bomb.width), position.y - (s_bomb.height), s_bomb.width * 4, s_bomb.height * 4);
+        topLeft.debug();
+        topRight.debug();
+        bottomLelft.debug();
+        bottomRight.debug();
     };
 
     this.dispose = function () {

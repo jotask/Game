@@ -164,7 +164,9 @@ function Menu(){
 
 function Play() {
     const POINTS_NEXTLEVEL = 10;
-    const init_seconds = 3;
+
+    // FIXME
+    const init_seconds = 100;
 
     // FIXME
     var level = 0;

@@ -34,7 +34,7 @@ function Player(){
     };
 
     this.onClick = function (e){
-        // attack.attack(e);
+        attack.attack(e);
     };
 
     this.update = function (delta){
@@ -153,7 +153,7 @@ function SwordAttack(jugador){
     };
 
     var attackDirection = function(dir){
-        console.log(dir);
+        // return the direction for the attack
     };
 
     this.attack = function (e){
@@ -165,7 +165,6 @@ function SwordAttack(jugador){
         attackDirection(getDirection(e));
     };
 
-    var rotate = 0;
     this.debug = function () {
         if(sword.visible){
             ctx.fillRect(sword.position.x, sword.position.y, sword.width, sword.height);
