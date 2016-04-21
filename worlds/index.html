@@ -14,36 +14,40 @@
     </style>
 </head>
 <body onload="load()">
-<div id="header">Not a Hero!</div>
-<div id="web">
-    <div id="menu">
-        <ul id="ulmenu">
+<div class="header">Not a Hero!</div>
+<div class="web">
+    <div class="menu">
+        <ul class="ulmenu">
             <li><a href="index.html">Play</a></li>
             <li><a href="manual.html">How to Play!</a></li>
             <li><a href="about.html">About</a></li>
         </ul>
     </div>
-    <div id="content">
-        <div id="contenido">
-            <noscript>
-                <p>For full functionality of this page it is necessary to enable JavaScript.
-                    Here are the <a href="http://www.enable-javascript.com/" target="_blank">
-                        instructions how to enable JavaScript in your web browser</a>.</p>
-            </noscript>
-            <script src="js/sprite.js"></script>
-            <script src="js/states.js"></script>
-            <script src="js/util.js"></script>
-            <script src="js/gui.js"></script>
-            <script src="js/enemy.js"></script>
-            <script src="js/player.js"></script>
-            <script src="js/world.js"></script>
-            <script src="js/game.js"></script>
-            <audio id="audio_kill" src="img/kill.wav"></audio>
-            <audio id="sound_explosion" src="img/explosion.wav"></audio>
-            <audio id="audio_next_level" src="img/audio_next_level.wav"></audio>
+    <div class="content">
+        <div id="contenido" class="contenido">
+            <div id="canvas">
+                <noscript>
+                    <p>For full functionality of this page it is necessary to enable JavaScript.
+                        Here are the <a href="http://www.enable-javascript.com/" target="_blank">
+                            instructions how to enable JavaScript in your web browser</a>.</p>
+                </noscript>
+                <script src="js/sprite.js"></script>
+                <script src="js/states.js"></script>
+                <script src="js/util.js"></script>
+                <script src="js/gui.js"></script>
+                <script src="js/enemy.js"></script>
+                <script src="js/player.js"></script>
+                <script src="js/world.js"></script>
+                <script src="js/game.js"></script>
+                <audio id="audio_kill" src="img/kill.wav"></audio>
+                <audio id="sound_explosion" src="img/explosion.wav"></audio>
+                <audio id="audio_next_level" src="img/audio_next_level.wav"></audio>
+            </div>
+            <div style="clear: both;"></div>
+            <div id="mute" onclick="muteSound()" class="mute">Disable Sounds</div>
         </div>
     </div>
-    <div id="footer">
+    <div class="footer">
         Jose Vives -
         <a href="http://validator.w3.org/check?uri=referer">
             <img style="border:0;width:44px;height:15px" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" />
