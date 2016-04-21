@@ -1,55 +1,11 @@
-/*body{*/
-
-    /*background-color: #2b669a;*/
-
-    /*!*background-image: url("../img/bg.jpg");*!*/
-    /*!*background-size: 7%;*!*/
-
-    /*!*background-image: url("../img/p.jpg");*!*/
-    /*!*background-size: 100%, 100%;*!*/
-    /*!*background-repeat: repeat-x;*!*/
-    /*!*background-blend-mode: color-dodge;*!*/
-/*}*/
-
-/*canvas {*/
-    /*display: block;*/
-    /*position: absolute;*/
-    /*margin: auto;*/
-    /*top: 0;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*!*background:transparent;*!*/
-    /*!*border: 25px dotted white;*!*/
-    /*!*outline: thick solid #00ff00";*!*/
-    /*outline-style: dotted;*/
-    /*outline-width: 25px;*/
-    /*outline-color: black;*/
-
-    /*!*background-color: red;*!*/
-    /*!*outline: 10px dashed #E0E4CC;*!*/
-    /*box-shadow: 0 0 0 10px #1b6d85;*/
-    /*!*animation: 1s animateBorderOne ease infinite;*!*/
-/*}*/
-
-/*@keyframes animateBorderOne {*/
-    /*to {*/
-        /*outline-color: #69D2E7;*/
-        /*box-shadow: 0 0 0 13px #E0E4CC;*/
-    /*}*/
-/*}*/
-
 body {
-    background-image: url('../img/background.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: url('../img/background.jpg') no-repeat fixed center;
     background-size: cover;
-    background-position: center;
     padding-top:20px;
 }
 .header {
     width: 100%;
-    border: 0px solid yellow;
+    border: 0 solid yellow;
     margin:auto;
     font-family: "Courier New", Times, serif;
     font-size:400%;
@@ -71,24 +27,24 @@ canvas{
     display: block;
 }
 .menu {
-    border: 0px solid red;
+    border: 0 solid red;
     height: 30px;
     margin:auto;
     width:75%;
     padding-top:15px;
 }
 .content {
-    border: 0px solid green;
+    border: 0 solid green;
     padding:5%;
 }
 .contenido {
-    border: 0px solid yellow;
+    border: 0 solid yellow;
     margin-top: 30px;
 }
 .footer {
     font-weight: bold;
     text-align: center;
-    border: 0px solid red;
+    border: 0 solid red;
     padding: 2%;
 }
 /************/
@@ -97,16 +53,15 @@ canvas{
 ul.ulmenu {
     list-style: none outside none;
     margin: 0;
-    padding: 0;
     width:100%;
-    padding-left: 5%;
+    padding: 0 0 0 5%;
     font-size: 150%;
 }
 ul.ulmenu li {
     /*background: #fff url("Home2.png") no-repeat 5% 50%;*/
     background-size: 16px 16px;
     float: left;
-    border: 0px solid red;
+    border: 0 solid red;
     margin-right: 5%;
     padding-left:5%;
 }
@@ -126,10 +81,9 @@ ul.ulmenu li a:hover {
 /*****************/
 /*   Table Links */
 /*****************/
-.CSSTable {}
 .CSSTable table {
     width: 100%;
-    border: 0px solid red;
+    border: 0 solid red;
     text-align: center;
     font-size: 200%;
 }
@@ -145,7 +99,7 @@ ul.ulmenu li a:hover {
 /************/
 .image {
     float: right;
-    border: 0px solid pink;
+    border: 0 solid pink;
     width: 40%;
 }
 .image img{
@@ -155,13 +109,13 @@ ul.ulmenu li a:hover {
 .about {
     padding: 5px;
     text-align: justify;
-    border: 0px solid red;
+    border: 0 solid red;
     width: 55%;
 }
 .contact {
     margin-top: 15px;
     padding: 5px;
-    border: 0px solid green;
+    border: 0 solid green;
     text-align: center;
     width: 55%;
 }
@@ -172,26 +126,19 @@ ul.ulmenu li a:hover {
 }
 .oculto{ display: none; }
 
-.bomb{   background: url(../img/sprite.png) -96px 0px no-repeat; }
+.bomb{   background: url(../img/sprite.png) -96px 0 no-repeat; }
 .zombie{
-    background: url(../img/sprite.png) 0px -32px no-repeat;
+    background: url(../img/sprite.png) 0 -32px no-repeat;
     animation: zombie .8s steps(2) infinite;
 }
-.spider{ background: url(../img/sprite.png) 0px -128px no-repeat; }
+.spider{ background: url(../img/sprite.png) 0 -128px no-repeat; }
 .player{
     background-image: url(../img/sprite.png);
     animation: player .8s steps(2) infinite;
 }
 
-.itemDescription{
-    /*padding: 5px;*/
-    /*text-align: left;*/
-    border: 1px solid red;
-    /*width: 100%;*/
-    /*float: left;*/
-}
 .item{
-    border: 0px solid pink;
+    border: 0 solid pink;
     width: 32px;
     height: 32px;
     margin: 5px;
@@ -199,7 +146,7 @@ ul.ulmenu li a:hover {
 }
 .gameTitle{
      background: url(../img/sprite.png) -64px -170px no-repeat;
-     border: 0px solid red;
+     border: 0 solid red;
     height: 85px;
     width: 190px;
  }
@@ -209,7 +156,7 @@ ul.ulmenu li a:hover {
 .itemTitulo{
     padding: 5px;
     text-align: justify;
-    border: 0px solid green;
+    border: 0 solid green;
 }
 .imageLeft{
     float: left;
@@ -218,38 +165,34 @@ ul.ulmenu li a:hover {
 .itemValue{
     padding: 5px;
     text-align: justify;
-    border: 0px solid blue;
+    border: 0 solid blue;
 
     font-weight: normal;
     color: #000000;
     letter-spacing: 1pt;
     word-spacing: 2pt;
     font-size: 20px;
-    text-align: justify;
     /*font-family: times new roman, times, serif;*/
     line-height: 1;
 
 
 }
 @keyframes player {
-    100% { background-position: -64px 0px; }
+    100% { background-position: -64px 0; }
 }
 @keyframes zombie {
     100% { background-position: -64px -32px; }
 }
 .shadow{
-    -webkit-box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 36px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 36px 0 rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 36px 0 rgba(0,0,0,0.75);
 }
 
 .fill{ width: 100%; }
 .pad { padding: 20px; }
 .mute{
-    border: 0px solid red;
+    border: 0 solid red;
     margin-top: 15px;
     text-align: center;
-}
-.tiny{
-    font-size: 3px;
 }

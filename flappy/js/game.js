@@ -158,8 +158,7 @@ var
                  var p = this._pipes[i];
                  s_pipeSouth.draw(ctx, p.x, p.y);
                  s_pipeNorth.draw(ctx, p.x, p.y + 80 + p.height);
-             };
-
+             }
              if(Boolean(debug)){
                  ctx.save();
                  ctx.fillStyle = "#f00";
@@ -228,7 +227,7 @@ function main(){
     }
 
     ctx = canvas.getContext("2d");
-    currentstate = states.Splash
+    currentstate = states.Splash;
     // append canvas to document
     document.body.appendChild(canvas);
 
@@ -242,10 +241,10 @@ function main(){
             y: height - 200,
             width: s_buttons.Ok.width,
             height: s_buttons.Ok.height
-        }
+        };
 
         run();
-    }
+    };
 
     img.src = "assets/sheet.png";
 
@@ -257,7 +256,7 @@ function run(){
         update();
         render();
         window.requestAnimationFrame(loop, canvas);
-    }
+    };
 
     window.requestAnimationFrame(loop, canvas)
 

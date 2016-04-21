@@ -30,7 +30,7 @@ function World(){
         this.createDoor();
     };
 
-    this.reset = function (level){
+    this.reset = function (){
         MAX++;
         this.init();
     };
@@ -177,26 +177,14 @@ function World(){
         }
     };
 
-    this.debugCoord = function(){
-        for(var i = 0; i < width; i++) {
-            for(var j = 0; j < height; j++) {
-                cells[i][j].text();
-            }
-        }
-    };
-
     this.activateDoor = function (){
-        door.activateDoor();
+        door.active = 1;
     };
 
     function Door(c){
 
         this.active = 0;
         this.cell = c;
-
-        this.activateDoor = function (){
-            this.active = 1;
-        }
 
     }
 

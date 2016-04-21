@@ -38,7 +38,7 @@ function Player(){
     };
 
     this.onClick = function (e){
-        // attack.attack(e);
+        attack.attack(e);
     };
 
     this.update = function (delta){

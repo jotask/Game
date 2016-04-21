@@ -193,13 +193,12 @@ function Play() {
     this.onClick = function (e) {
         this.player.onClick(e);
 
-        var tmp = false;
-
         var rect = canvas.getBoundingClientRect();
         var x = event.clientX - rect.left;
         var y = event.clientY - rect.top;
 
-        tmp = ((x > 0 && x < canvas.width) && (y > 0 && y < canvas.height));
+        // Check if click is inside canvas
+        var tmp = ((x > 0 && x < canvas.width) && (y > 0 && y < canvas.height));
 
         if(tmp)
             this.bombManager.newBomb(this.player.position);

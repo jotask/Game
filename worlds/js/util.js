@@ -92,10 +92,8 @@ function Button(s, x, y){
     };
 
     var collide = function (mouseX, mouseY){
-        if(((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.width)))&&((mouseY > bounds.y) && (mouseY < (bounds.y + bounds.height)))){
-            return true;
-        }
-        return false;
+        return !!(((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.width))) && ((mouseY > bounds.y) && (mouseY < (bounds.y + bounds.height))));
+
     }
 
 }

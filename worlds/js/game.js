@@ -82,14 +82,6 @@ var render = function(){
         gsm.debug(ctx);
 };
 
-function getMousePos(evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
-    };
-}
-
 var then = Date.now();
 
 var muteSound = function(){
@@ -101,4 +93,4 @@ var muteSound = function(){
         element.innerText = "Enable Sounds";
         mute = !mute;
     }
-}
+};
