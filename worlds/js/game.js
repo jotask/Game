@@ -1,8 +1,9 @@
 
-const firstState = states.Play;
+const firstState = states.Splash;
 const WIDTH = 512;
 const HEIGHT = 480;
-var debug = true;
+var debug = false;
+var mute = false;
 
 var canvas;
 var ctx;
@@ -31,7 +32,7 @@ var run = function(){
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     // document.body.appendChild(canvas);
-    document.getElementById("contenido").appendChild(canvas);
+    document.getElementById("canvas").appendChild(canvas);
 
     addListeners();
 
@@ -91,4 +92,13 @@ function getMousePos(evt) {
 
 var then = Date.now();
 
-// load();
+var muteSound = function(){
+    var element = document.getElementById("mute");
+    if(mute){
+        element.innerText = "Disable Sounds";
+        mute = !mute;
+    }else{
+        element.innerText = "Enable Sounds";
+        mute = !mute;
+    }
+}

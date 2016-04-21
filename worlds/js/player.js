@@ -5,6 +5,8 @@ function Player(){
     const speed = 250;
     const size = 32;
 
+    const attackSize = 30;
+    var currentAttackTime;
     var attack;
 
     // var health = 100;
@@ -24,6 +26,8 @@ function Player(){
 
         attack = new SwordAttack(this);
 
+        currentAttackTime = 0;
+
     };
 
     this.setPosition = function (xx, yy){
@@ -34,7 +38,7 @@ function Player(){
     };
 
     this.onClick = function (e){
-        attack.attack(e);
+        // attack.attack(e);
     };
 
     this.update = function (delta){
@@ -42,8 +46,16 @@ function Player(){
         this.velocity.reset();
 
         // handle input
+        if(69 in keysDown){
+            // add bomb
+            if(currentAttackTime > attackSize) {
+                gsm.getState().bombManager.newBomb(this.position);
+                currentAttackTime = 0;
+                console.log("add");
+            }
+        }
         if(87 in keysDown || 38 in keysDown){
-                this.velocity.y -= speed * delta;
+            this.velocity.y -= speed * delta;
         }
         if(83 in keysDown || 40 in keysDown){
             this.velocity.y += speed * delta;
@@ -73,6 +85,7 @@ function Player(){
         }
 
         attack.update();
+        currentAttackTime++;
 
     };
 

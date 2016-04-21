@@ -192,7 +192,17 @@ function Play() {
 
     this.onClick = function (e) {
         this.player.onClick(e);
-        this.bombManager.newBomb(this.player.position);
+
+        var tmp = false;
+
+        var rect = canvas.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+
+        tmp = ((x > 0 && x < canvas.width) && (y > 0 && y < canvas.height));
+
+        if(tmp)
+            this.bombManager.newBomb(this.player.position);
     };
 
     this.reset = function () {
@@ -237,7 +247,8 @@ function Play() {
     };
 
     this.nextLevel = function () {
-        document.getElementById("audio_next_level").play();
+        if(!mute)
+            document.getElementById("audio_next_level").play();
         level++;
         this.score.saveScore();
         this.reset();

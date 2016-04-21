@@ -158,7 +158,8 @@ function EntityManager(w){
     this.collides = function(b){
         for(var i = 0; i < entities.length; i++){
             if(Boolean(b.collideWithEntity(entities[i].getBounds()))){
-                document.getElementById("audio_kill").play();
+                if(!mute)
+                    document.getElementById("audio_kill").play();
                 gsm.getState().score.addScore(Number(1));
                 this.removeEnemy(entities[i]);
             }
@@ -364,7 +365,8 @@ function WeaponManager (){
                 }
                 if(bombs[i].needsExplode()){
                     bombs[i].explode();
-                    document.getElementById("sound_explosion").play();
+                    if(!mute)
+                        document.getElementById("sound_explosion").play();
                     removeBomb(bombs[i]);
                     continue;
                 }
@@ -422,8 +424,6 @@ function Bomb(p){
     };
 
     this.needsExplode = function(){
-        // FIXME
-        // return false;
         return Boolean(currentTime > timeToExplode);
     };
 
