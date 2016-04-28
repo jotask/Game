@@ -40,8 +40,13 @@ var run = function(){
     gsm.changeState(firstState);
 
     loop();
+
+    gsm.dispose();
 };
 
+// follow code is based on the followin link
+// Looks the same but is no copied, is based on this
+//https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
 var addListeners = function(){
 
     addEventListener("keydown", function(e){ keysDown[e.keyCode] = true; }, false);
@@ -65,8 +70,8 @@ var loop = function(){
 };
 
 var update = function(delta){
-    if(81 in keysDown)
-        debug = !debug;
+    // if(81 in keysDown)
+    //     debug = !debug;
     frames++;
     gsm.update(delta);
 };

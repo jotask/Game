@@ -165,10 +165,8 @@ function Menu(){
 function Play() {
     const POINTS_NEXTLEVEL = 10;
 
-    // FIXME
-    const init_seconds = 100;
+    const init_seconds = 3;
 
-    // FIXME
     var level = 0;
 
     this.init = function () {
@@ -281,23 +279,12 @@ function Play() {
 
     this.dispose = function () {
         this.world.dispose();
-        delete this.world;
-
         this.player.dispose();
-        delete this.player;
-
         this.entityManager.dispose();
-        delete this.entityManager;
-
         this.bombManager.dispose();
-        delete this.bombManager;
-
         this.gui.dispose();
-        delete this.gui;
-
-        this.score.saveAll();
+        this.score.saveScore();
         this.score.dispose();
-        delete this.score;
     };
 }
 
@@ -310,7 +297,8 @@ function GameOver(){
 
     this.init = function () {
         score = new Score();
-        score.loadAll();
+        score.loadPrevScore();
+        score.checkIfIsBest();
 
         var offsetX = 100;
         var offsetY = 350;
@@ -343,7 +331,7 @@ function GameOver(){
         ctx.fillStyle = 'white';
         ctx.font = '40pt Calibri';
         ctx.fillText('Your Score is: ' + score.getScore(), canvas.width / 2, canvas.height / 2 - (20));
-        ctx.fillText('HighScore: ' + score.getBests(), canvas.width / 2, canvas.height / 2 - (-40));
+        ctx.fillText('HighScore: ' + score.getBest(), canvas.width / 2, canvas.height / 2 - (-40));
         // ctx.fillText('Hello!', canvas.width / 2 - (50), canvas.height / 2 - (100));
 
         menu.render();

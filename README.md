@@ -1,6 +1,6 @@
 # NotAHero
 
-Game made for Jose Vives Iznardo for Aberystwyth University. For the module CS25210 Client-Side Graphics Programming for the Web.
+Game made by Jose Vives Iznardo for Aberystwyth University. For the module CS25210 Client-Side Graphics Programming for the Web.
 
 ## Getting Started
 

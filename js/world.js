@@ -13,8 +13,6 @@ function World(){
     const width = 16;
     const height = 15;
 
-    // FIXME delete debug
-
     this.init = function (){
         for(var i = 0; i < width; i++) {
             cells[i] = [];
@@ -94,12 +92,6 @@ function World(){
     this.collide = function(player) {
 
         nextBounds = new Bound(player.bounds.x + player.velocity.x, player.bounds.y + player.velocity.y, player.bounds.width, player.bounds.height);
-
-        // FIXME
-        // console.log(player.bounds.x, player.bounds.y, player.bounds.width, player.bounds.height);
-
-        // nextBounds.x += player.velocity.x;
-        // nextBounds.y += player.velocity.y;
 
         celulas = this.getCells(nextBounds.x, nextBounds.y);
 

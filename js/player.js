@@ -99,7 +99,6 @@ function Player(){
     };
 
     this.debug = function (){
-        // TODO
         ctx.fillStyle = "cyan";
         this.bounds.debug();
         attack.debug();

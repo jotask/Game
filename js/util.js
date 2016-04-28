@@ -37,7 +37,6 @@ function Bound(xP, yP, w, h){
 
     this.collideWith = function(other){
 
-        // FIXME
         var one = Boolean(this.x < (other.x + other.width));
         var two = Boolean((this.x + this.width)+100 > other.x);
         var three = Boolean(this.y < (other.y + other.height));
@@ -47,8 +46,6 @@ function Bound(xP, yP, w, h){
     };
 
     this.collideWithEntity = function(other){
-
-        // FIXME
 
         var one = Boolean(this.x < (other.x + other.width));
         var two = Boolean((this.x + this.width) > other.x);
@@ -175,7 +172,6 @@ function EntityManager(w){
     };
 
     this.reset = function () {
-        // TODO better delete enemies
         entities = [];
     };
 
@@ -278,7 +274,8 @@ function Score(){
         score = score + parseInt(s);
     };
 
-    this.getBests = function (){
+    this.getBest = function (){
+        this.checkIfIsBest();
         return high;
     };
 
@@ -286,35 +283,23 @@ function Score(){
         score = 0;
     };
 
-    this.loadAll = function () {
-        this.loadPrevScore();
-        this.loadHigh();
-    };
-
-    this.loadHigh = function () {
-        high = parseInt(localStorage.getItem("high"));
-    };
-
     this.loadPrevScore = function () {
-        score = parseInt(localStorage.getItem("score"));
+        score = parseInt(localStorage.getItem("score") || 0);
     };
 
     this.saveScore = function () {
         localStorage.setItem("score", score);
     };
 
-    this.saveAll = function(){{{}}
-        this.loadHigh();
+    this.checkIfIsBest = function(){
+        high = parseInt(localStorage.getItem("high") || 0);
         if(high !== null){
             if (score > high) {
                 localStorage.setItem("high", score );
-                console.log("isbest " + score + " - " +high);
+                return true;
             }
-        }else{
-            localStorage.setItem("high", score );
         }
-
-        // localStorage.setItem("high", high);
+        return false;
     };
 
     this.dispose = function () {
@@ -351,7 +336,6 @@ function WeaponManager (){
     };
 
     this.reset = function () {
-        // TODO better delete enemies
         bombs = [];
     };
 
@@ -426,7 +410,6 @@ function Bomb(p){
     };
 
     this.explode = function () {
-        // FIXME
 
         var state;
         state = gsm.getState();

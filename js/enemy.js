@@ -29,7 +29,6 @@ function Enemy(anim){
         this.updateAnimation();
     };
 
-    // FIXME fixanimations
     this.updateAnimation = function(){
         var n = 10;
         frame += frames % n === 0 ? 1: 0;
@@ -148,7 +147,6 @@ function RandomMovement(entity, s){
     };
 
     var test = function(){
-        // FIXME avoid when collide and stop move
         return new Vector2(0,0);
     };
 
@@ -172,7 +170,6 @@ function Zombie(){
     };
 
     this.randomUpdate = function(){
-        // FIXME
         move.randomUpdate();
     };
 

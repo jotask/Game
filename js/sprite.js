@@ -19,6 +19,8 @@ var
     s_world_air;
 
 /**
+ * Sprite class bassed on the following link:
+ * https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
  * Simple sprite class
  *
  * @param {Image}  img    spritesheet image
@@ -36,6 +38,8 @@ function Sprite(img, x, y, width, height) {
 }
 /**
  * Draw sprite ta canvas context
+ * sprite prototype is from the follow link
+ * https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
  *
  * @param  {number} x   x-position on canvas to draw from
  * @param  {number} y   y-position on canvas to draw from
@@ -45,11 +49,6 @@ Sprite.prototype.draw = function(x, y) {
         x, y, this.width, this.height);
 };
 
-/**
- * Initiate all sprite
- *
- * @param  {Image} img spritesheet image
- */
 function initSprites(img) {
 
     s_splash = new Sprite(img, 32,  0, 16, 15);
